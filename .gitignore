@@ -17,6 +17,16 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# IDE files
+.idea
+*.iml
+
+# Compiled Files
+app/layout/css/styles.css
+app/layout/css/styles.css.map
+app/layout/js/app.js
+app/layout/js/app.js.map
+
 # =========================
 # Operating System Files
 # =========================
@@ -45,3 +55,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+_files/
+files/
+prepros.cfg
