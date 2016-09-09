@@ -6,4 +6,3 @@
 	<hr>
 
 </header>
-<main id="main">
