@@ -9,14 +9,6 @@
 		 data-theme="<?= $this->data['theme']; ?>" ></div>
 
 </main>
-<div id="routes" class="none"><? $routes = array();
-
-		foreach ($this->routes as $key => $route) {
-			if( isset($route['pager']) )
-				array_push($routes, $route['pager']);
-		}
-
-	    echo json_encode( $routes ); ?></div>
 <?php if( isset($footer) && $footer ) tview('footer') ?>
 
 

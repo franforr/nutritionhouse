@@ -29,3 +29,11 @@ $layoutversion = $this->config->item('layout-version', 'app');
 <wrapper>
 <?php //$this->load->view('common/app-fb') ?>
 <script>App.Init();</script>
+<div id="routes" class="none"><? $routes = array();
+
+		foreach ($this->routes as $key => $route) {
+			if( isset($route['pager']) )
+				array_push($routes, $route['pager']);
+		}
+
+	    echo json_encode( $routes ); ?></div>
