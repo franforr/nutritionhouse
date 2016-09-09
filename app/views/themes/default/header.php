@@ -1,5 +1,3 @@
-<? $this->load->view('common/html') ?>
-	
 <header class="header">
 	
 	<a href="<?= base_url('') ?>">Home</a> -

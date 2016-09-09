@@ -36,7 +36,9 @@ var breakpoint = function(bk) {
 // Depende de pre/components/_loading.scss
 $.fn.loading = function(btn) {
 
-  b = new Nanobar();
+  $('#nanobar').remove();
+
+  b = new Nanobar({id:'nanobar'});
   NanoVal = 0;
   b.go(NanoVal);
 

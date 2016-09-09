@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class App extends APP_Controller {
 
-	protected 
+	public 
 		$routes = array(
 			'404' => array('section'=> '404', 'theme'=> 'default'),
 			'home' => array('section'=> 'home', 'theme'=> 'default', 'pager'=>'/'),
@@ -52,19 +52,5 @@ class App extends APP_Controller {
 	{
 	    return $this->index('404');
 	}
-
-	public function pager()
-	{
-
-		$data = array();
-
-		foreach ($this->routes as $key => $route) {
-			if( isset($route['pager']) )
-				array_push($data, $route['pager']);
-		}
-
-	    echo json_encode( $data );
-	}
-
 
 }
