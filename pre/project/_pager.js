@@ -13,9 +13,7 @@ var Pager = function(){
 	};
 
 	function set (data) {
-		
-		
-
+	
     	var path = data.full_href;
 
 		var MAIN = $('#main').addClass('old-main');

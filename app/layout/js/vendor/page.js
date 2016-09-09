@@ -18,6 +18,9 @@ var Page = (function( base ) {
 
 				$(a).addClass('pageRender').click(function(event) {
 					event.preventDefault();
+
+					if( $('#main').hasClass('old-main') )
+						return false;
 					
 					ChangeURI(href);
 
