@@ -18,6 +18,16 @@ if ( ! function_exists('tview'))
   }
 }
 
+if ( ! function_exists('href'))
+{
+  function href( $a )
+  {
+    $CI =& get_instance();
+    return isset($CI->routes[$a]) && ($CI->routes[$a]['pager']) ? base_url($CI->routes[$a]['pager']) : $a;
+  }
+}
+
+
 if ( ! function_exists('thumb'))
 {
   function thumb( $file = '', $w = 0, $h = 0, $crop = true, $global = false)
