@@ -20,30 +20,29 @@ class App extends APP_Controller {
 
 	    $this->data['section'] = $data_section['section'];
 	    $this->data['theme'] = $data_section['theme'];
+	    $this->data['icon_theme'] = 'default';
 	    $this->data['theme_path'] = 'themes/'. $this->data['theme'] .'/';
 
 	    $this->lang->load('web');
 	    $this->load->helper('date');
 	    $this->load->model('DataModel', 'Data');
 
-	    $params = array();
-
 	    if( !$this->input->is_ajax_request() ) {
 
-	      $params['headers']['head-title'] = '';
-	      $params['headers']['title'] = '';
-	      $params['headers']['description'] = '';
-	      $params['headers']['keywords'] = '';
+	      $this->data['headers']['head-title'] = '';
+	      $this->data['headers']['title'] = '';
+	      $this->data['headers']['description'] = '';
+	      $this->data['headers']['keywords'] = '';
 
-	      $params['headers']['favicon'] = '';
-	      $params['headers']['share-image'] = '';
+	      $this->data['headers']['favicon'] = '';
+	      $this->data['headers']['share-image'] = '';
 
-	      $params['header'] = true;
-	      $params['html'] = true;
-	      $params['footer'] = true;
+	      $this->data['header'] = true;
+	      $this->data['html'] = true;
+	      $this->data['footer'] = true;
 	    }
 
-	    $this->load->view( $this->data['theme_path'] . "base", $params );
+	    $this->load->view( $this->data['theme_path'] . "base", $this->data );
 
 	}
 
