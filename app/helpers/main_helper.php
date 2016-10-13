@@ -164,3 +164,24 @@ if ( ! function_exists('create_select_options'))
     return $data;
   }
 }
+
+if ( ! function_exists('prep_word_url'))
+{
+  function prep_word_url( $string, $spacer = "-" )
+  {
+    $string = rtrim(trim($string));
+    $string = substr($string,0, 100);
+    $string = mb_strtolower($string, 'UTF-8');
+    $string = preg_replace("/[ÁáÄäÂâ]/iu","a",$string);
+    $string = preg_replace("/[ÉéËëÊê]/iu","e",$string);
+    $string = preg_replace("/[ÍíÏïÎî]/iu","i",$string);
+    $string = preg_replace("/[ÓóÖöÔô]/iu","o",$string);
+    $string = preg_replace("/[ÚúÜüÛû]/iu","u",$string);
+    $string = preg_replace("/[Ññ]/iu","n",$string);
+    $string = trim(preg_replace("/[^ A-Za-z0-9_]/", " ", $string));
+    $string = preg_replace("/[ \t\n\r]+/", $spacer, $string);
+    $string = str_replace(" ", $spacer, $string);
+    $string = preg_replace("/[ -]+/", $spacer, $string);
+    return $string;
+  }
+}
