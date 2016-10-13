@@ -8,6 +8,8 @@ var Page = (function( base ) {
 			if(!href) return;
 			var target = $(a).attr('target');
 			if(target == '_blank') return;
+			if(href.startsWith('#')) return;
+
 			var	part_of_href = String(href).slice( base.length );
 			var this_params = parse(part_of_href);
 
@@ -22,7 +24,6 @@ var Page = (function( base ) {
 					if( $('#main').hasClass('old-main') )
 						return false;
 					
-					ChangeURI(href);
 
 					var data = {
 						base: base,
@@ -32,6 +33,31 @@ var Page = (function( base ) {
 						params: parse_url(part_of_href)
 					}
 
+					$(window).off('popstate');
+					$(window).on('popstate', function() {
+
+
+						var href = window.location.href;
+
+						var	part_of_href = String(href).slice( base.length );
+						var this_params = parse(part_of_href);
+
+						var section = params[0];
+						var this_section = (this_params[0]==undefined) ? '/' : this_params[0];
+
+						var data = {
+							base: base,
+							href: part_of_href,
+							full_href: href,
+							section: section,
+							params: parse_url(part_of_href)
+						}
+
+						set(data);
+
+					});
+
+					ChangeURI(href);
 					set(data);
 					
 					return params;
@@ -128,10 +154,12 @@ var Page = (function( base ) {
 	  return str.replace(/([.+*?=^!:${}()[\]|\/])/g, '\\$1')
 	}
 
-	var ChangeURI = function(url) {
+	var ChangeURI = function(targetUrl) {
 	  if( window.history == undefined || window.history.pushState == undefined ) return;
-	  if(window.location.href == url) return;
-	  return window.history.pushState({}, "", url);
+	  if(window.location.href == targetUrl) return;
+	  window.history.pushState({url: "" + targetUrl + ""}, "", targetUrl);
+
+	  return;
 	};
 
 });
