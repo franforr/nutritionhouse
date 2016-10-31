@@ -10,7 +10,10 @@ var Page = (function( base ) {
 			if(target == '_blank') return;
 			if(href.startsWith('#')) return;
 
+			if(base)
 			var	part_of_href = String(href).slice( base.length );
+			else
+			var	part_of_href = '';
 			var this_params = parse(part_of_href);
 
 			var section = params[0];

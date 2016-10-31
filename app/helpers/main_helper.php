@@ -185,3 +185,11 @@ if ( ! function_exists('prep_word_url'))
     return $string;
   }
 }
+
+if ( ! function_exists('files'))
+{
+  function files( $url = '' )
+  {
+    return base_url() .'../files/' . trim($url,'/');
+  }
+}

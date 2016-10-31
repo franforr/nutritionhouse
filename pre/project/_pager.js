@@ -44,6 +44,8 @@ var Pager = function(){
 
 		    	Main();
 		  		
+		  		$('html, body').animate({scrollTop : MAIN.position().top},0);
+		  		
 		  	}, time_page_out + 300);
 		});
 

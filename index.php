@@ -34,6 +34,8 @@ $application_folder = 'app';
 
 $view_folder = '';
 
+// http://php.net/manual/es/function.date-default-timezone-set.php
+date_default_timezone_set('America/Argentina/Buenos_Aires'); 
 $assign_to_config['language'] = 'spanish';
 
 
