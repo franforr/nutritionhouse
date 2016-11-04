@@ -16,6 +16,10 @@ var Page = (function( base ) {
 			var	part_of_href = '';
 			var this_params = parse(part_of_href);
 
+	
+
+
+
 			var section = params[0];
 			var this_section = (this_params[0]==undefined) ? '/' : this_params[0];
 
@@ -58,10 +62,30 @@ var Page = (function( base ) {
 
 						set(data);
 
+
+
 					});
 
 					ChangeURI(href);
-					set(data);
+					set(data, function() {
+
+						var last_param = this_params[this_params.length - 1];
+						var anchor = last_param.split('#');
+
+						if(anchor.length==2) { 
+							var target = $('#'+anchor[1]);
+
+							if( target.length ) {
+								
+								$('html, body').animate({
+						            scrollTop: target.offset().top
+						        }, 500);
+							}
+
+						}
+					});
+
+
 					
 					return params;
 				});
