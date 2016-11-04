@@ -1,3 +1,4 @@
+// var pageFN = [];
 var App = {
 	config:{
 		url: '',
@@ -34,6 +35,7 @@ var Main = function() {
 	
 	// Si se quere ejecutar una funcion por sección crearla en pre/section y descomentar:
 	// Ejemplo de fn: pageFN['principal'] = function() { /*codigo*/ }
+	// Descomentar "var pageFN = [];" al principio de este doc para crear una variable global que acumula las FNs
 	// if (typeof pageFN[App.config.section] == "function") {
 	// 	pageFN[App.config.section]();
 	// }
