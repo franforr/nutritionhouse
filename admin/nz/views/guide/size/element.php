@@ -16,11 +16,11 @@
       <fieldset>
         <div class="row">
         
-<? $field = 'company'; $this->load->view('app/form', array('item' => array(
+<? $field = 'size'; $this->load->view('app/form', array('item' => array(
     'columns' => 4,
     'form' => $wgetId,
     'name' => $field,
-    'label' => $this->lang->line('Empresa'),
+    'label' => $this->lang->line('Tamaño'),
     'value' => $dataItem[$field],
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),
@@ -50,7 +50,7 @@ $(document).ready(function() {
   <? endif ?>
   formGlobal.validate({ 
     rules : {
-      /*'company': 'required' */     
+      /*'size': 'required' */     
     },
     messages : {
     }

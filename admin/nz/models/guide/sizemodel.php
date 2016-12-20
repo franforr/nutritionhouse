@@ -1,11 +1,11 @@
 <?php
 
-class CompanyfnModel extends AppModel {
+class SizeModel extends AppModel {
 
   function __construct()
   {
     parent::__construct();
-    $this->table = "company";    
+    $this->table = "product_size";    
   }
   
   public function ListItems()
@@ -15,7 +15,7 @@ class CompanyfnModel extends AppModel {
     $perpage = $this->input->post('iDisplayLength') ? $this->input->post('iDisplayLength') : 10;
     $orderby = $this->input->post('filter-sort-column') ? $this->input->post('filter-sort-column') : $this->mconfig['order-column'];
     $ascdesc = $this->input->post('filter-sort-type') ? $this->input->post('filter-sort-type') : $this->mconfig['order-type'];
-    $sql = "SELECT t.id_company as id, t.*    
+    $sql = "SELECT t.id_size as id, t.*    
     FROM {$this->table} as t    
     WHERE $where 
     ORDER BY `{$orderby}` {$ascdesc} LIMIT {$init}, {$perpage}";
@@ -40,9 +40,9 @@ class CompanyfnModel extends AppModel {
     if(!$text)      
       $text = $this->input->post('sSearch') ? $this->input->post('sSearch') : false;
     if($text)
-      $sql .= " AND ( t.company like '%{$text}%'  OR t.id_company = '{$text}') ";   
+      $sql .= " AND ( t.size like '%{$text}%'  OR t.id_size = '{$text}') ";   
     if($this->input->post('filter-id'))
-      $sql .= " AND t.id_company = '". $this->input->post('filter-id') ."'";  
+      $sql .= " AND t.id_size = '". $this->input->post('filter-id') ."'";  
     return $sql;
   }  
   
@@ -65,8 +65,8 @@ class CompanyfnModel extends AppModel {
   {
     return array(
       array(
-       'field'   => 'company', 
-       'label'   => $this->lang->line('Empresa'), 
+       'field'   => 'size', 
+       'label'   => $this->lang->line('Tamaño'), 
        'rules'   => 'trim'
       ),
     );
@@ -75,10 +75,10 @@ class CompanyfnModel extends AppModel {
   public function Name( $id = 0 )
   {
     $id = $id ? $id : $this->id;
-    $sql = "SELECT company as `name`
+    $sql = "SELECT size as `name`
     FROM {$this->table}
 
-    WHERE id_company = '{$id}'";
+    WHERE id_size = '{$id}'";
     $query = $this->db->query($sql);
     $row = $query->row();
     return clean_title($row->name);
@@ -86,10 +86,10 @@ class CompanyfnModel extends AppModel {
   
   public function Duplicate( $id = 0 )
   {    
-    $sql = "select * from {$this->table} where id_company = '{$id}'";
+    $sql = "select * from {$this->table} where id_size = '{$id}'";
     $row = $this->db->query($sql)->row_array();  
     if(!$row) return false;
-    unset($row['id_company']);    
+    unset($row['id_size']);    
         
     $sql = $this->db->insert_string($this->table, $row );
     $this->db->query($sql); 
@@ -101,10 +101,10 @@ class CompanyfnModel extends AppModel {
   {
     if(!$this->MApp->secure->edit) return;
     $data = array(
-      'company' => $this->input->post('company'),
+      'size' => $this->input->post('size'),
     );
     if( $this->id )
-      $sql = $this->db->update_string($this->table, $data, "id_company = '{$this->id}'" );
+      $sql = $this->db->update_string($this->table, $data, "id_size = '{$this->id}'" );
     else
       $sql = $this->db->insert_string($this->table, $data );
     $this->db->query($sql); 
@@ -115,7 +115,7 @@ class CompanyfnModel extends AppModel {
   {
     if(!$this->MApp->secure->delete) return false;
     $sql = "DELETE FROM {$this->table}
-    WHERE id_company = '{$id}'";
+    WHERE id_size = '{$id}'";
     $this->db->query($sql);
     return true;
   }
@@ -125,15 +125,15 @@ class CompanyfnModel extends AppModel {
     $ret = array();
     if($id)
     {
-      $sql = "SELECT t.id_company as id, t.*      
+      $sql = "SELECT t.id_size as id, t.*      
       FROM {$this->table} as t      
-      WHERE t.id_company = '{$id}' 
+      WHERE t.id_size = '{$id}' 
       LIMIT 0, 1";
       $ret = $this->db->query($sql)->row_array();
       if($ret) return $ret;
       if($null) return false;
     }    
-    $ret['company'] = $this->input->post() ? $this->input->post('company') : '';
+    $ret['size'] = $this->input->post() ? $this->input->post('size') : '';
     return $ret;
   }
 

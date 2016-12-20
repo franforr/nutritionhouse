@@ -119,7 +119,7 @@ class DataModel extends CI_Model
   {
     if( $where ) 
       $where = 'where '. $where;
-    return create_select_options($this->db->query("SELECT id_shipping as id, shipping as el FROM cart_shipping $where order by num"), $all);
+    return create_select_options($this->db->query("SELECT id_shipping as id, shipping as el FROM cart_shipping $where"), $all);
   }
 
   public function SelectStore( $where = '', $all = '' )
@@ -140,7 +140,7 @@ class DataModel extends CI_Model
   {
     if( $where ) 
       $where = 'where '. $where;
-    return create_select_options($this->db->query("SELECT id_product as id, CONCAT(code, ' - ', name) as el FROM product c where active = '1'"), $all);
+    return create_select_options($this->db->query("SELECT id_product as id, title as el FROM product c where active = '1'"), $all);
   }
 
   public function SelectProductCares( $where = '', $all = '' )
@@ -241,5 +241,20 @@ class DataModel extends CI_Model
     return create_select_options($this->db->query("SELECT id_company as id, company as el FROM company $where order by el"), $all);
   }
 
+
+
+  public function SelectProductSize( $where = '', $all = '' )
+  {
+    if( $where ) 
+      $where = 'where '. $where;
+    return create_select_options($this->db->query("SELECT id_size as id, size as el FROM product_size $where order by el"), $all);
+  }
+
+  public function SelectGim( $where = '', $all = '' )
+  {
+    if( $where ) 
+      $where = 'where '. $where;
+    return create_select_options($this->db->query("SELECT id_gim as id, name as el FROM gim $where order by el"), $all);
+  }
 
 }

@@ -4,7 +4,7 @@ require_once NZAPATH . "config/nzapp.php";
 
 $config['project-id'] = 7;
 $config['db-global'] = 'gd.';
-$config['client'] = 'SiPreBA';
+$config['client'] = 'Nutrition House';
 $config['client-mail'] = '';
 $config['lang'] = 'es';
 $config['layout-version'] = '?v1.001';
