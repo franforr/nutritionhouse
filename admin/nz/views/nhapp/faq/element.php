@@ -5,7 +5,7 @@
   <div class="row page-title-row">
         
     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
-      <h1 class="page-title txt-color-blueDark"><i class="page-title-ico <?= $appTitleIco ?>"></i> <?= prep_app_title($appTitle) ?></h1>
+      <h1 class="page-title txt-color-blueDark"><?= $appTitleIco ?><?= prep_app_title($appTitle) ?></h1>
     </div>
       </div>
   <section class="widget-form-content">
@@ -30,7 +30,7 @@
         <div class="row">
         
 <? $field = 'title'; $this->load->view('app/form', array('item' => array(
-    'columns' => 4,
+    'columns' => 6,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Título'),
@@ -42,7 +42,7 @@
 <? $field = 'text'; $this->load->view('app/form', array('item' => array(
     'type' => 'textarea',
     'height' => 160,
-    'columns' => 6,
+    'columns' => 12,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Texto'),

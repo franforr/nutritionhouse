@@ -11,13 +11,9 @@ var DataTableFn = function(){
     <? $this->load->view("script/datatable/order.js") ?>
   };
   configDT.aoColumns = [
-    { "sTitle": "<input class='checkbox-select-all' type='checkbox' />", "sWidth": "10px", "mData": "id", "bSortable": false, "bSearchable": false, "sType": "html", "mRender" : function( data, type, full ){ 
-      return '<span class="checkbox"><input value="" name="" class="checkbox-select-row" type="checkbox"><i></i></span>';
-    }},
-    { "sTitle": "<?= $this->lang->line("ID") ?>", "sWidth": "40px", "mData": "id", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Nombre") ?>", "mData": "name", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Código") ?>", "mData": "code", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Contraseña") ?>", "mData": "password", "sType": "string"},
+    { "sWidth": "160px","sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Nombre") ?>", "mData": "name", "sType": "string"},
+    { "sWidth": "100px","sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Código") ?>", "mData": "code", "sType": "string"},
+    { "sWidth": "100px","sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Contraseña") ?>", "mData": "password", "sType": "string"},
     { "sWidth": "60px", "sClass": "text-align-center widget-filemanager", "sTitle": "<?= $this->lang->line("Imagen") ?>", "mData": "fm1file", "sType":"html", "mRender" : function( data, type, full ){ 
       var type = 0;
       if(data) type = full["fm1type"];

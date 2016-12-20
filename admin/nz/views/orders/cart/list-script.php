@@ -12,21 +12,13 @@ var DataTableFn = function(){
     <? $this->load->view("script/datatable/order.js") ?>
   };
   configDT.aoColumns = [
-    { "sTitle": "<input class='checkbox-select-all' type='checkbox' />", "sWidth": "10px", "mData": "id", "bSortable": false, "bSearchable": false, "sType": "html", "mRender" : function( data, type, full ){ 
-      return '<span class="checkbox"><input value="" name="" class="checkbox-select-row" type="checkbox"><i></i></span>';
-    }},
-    { "sTitle": "<?= $this->lang->line("ID") ?>", "sWidth": "40px", "mData": "id", "sType": "string"},
-    { "sTitle": "<?= $this->lang->line("Gimnasio") ?>", "mData": "gim", "sType": "string"},
-    { "sTitle": "<?= $this->lang->line("Estado") ?>", "mData": "state", "sType": "string"},
-    { "sTitle": "<?= $this->lang->line("Envío") ?>", "mData": "shipping", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Nombre") ?>", "mData": "name", "sType": "string"},
+      { "sTitle": "<?= $this->lang->line("Estado") ?>", "mData": "state", "sType": "string"},
+          { "bVisible": true, "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("E-mail") ?>", "mData": "mail", "sType": "string"},
+  { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Nombre") ?>", "mData": "name", "sType": "string"},
     { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Apellido") ?>", "mData": "lastname", "sType": "string"},
+    { "sTitle": "<?= $this->lang->line("Gimnasio") ?>", "mData": "gim", "sType": "string"},
+    { "bVisible": false, "sTitle": "<?= $this->lang->line("Envío") ?>", "mData": "shipping", "sType": "string"},
     { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Dirección") ?>", "mData": "address", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Código Postal") ?>", "mData": "postal_code", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Provincia") ?>", "mData": "province", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Ciudad") ?>", "mData": "city", "sType": "string"},
-    { "bVisible": false, "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Teléfono") ?>", "mData": "phone", "sType": "string"},
-    { "bVisible": false, "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("E-mail") ?>", "mData": "mail", "sType": "string"},
     { "bVisible": false, "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Fecha creación") ?>", "mData": "created", "sType": "html", "mRender" : function( data, type, full ){ 
       if(!data || data == '0000-00-00 00:00') return '-';
       return Date.fromMysql(data).format("dd/MM/yyyy hh:mm:ss");
@@ -38,7 +30,7 @@ var DataTableFn = function(){
     { "bVisible": false, "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Descuento") ?>", "mData": "coupon_1", "sType": "string"},
     { "bVisible": false, "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Subtotal") ?>", "mData": "subtotal", "sType": "string"},
     { "bVisible": false, "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Descuento") ?>", "mData": "desc1", "sType": "string"},
-    { "bVisible": false, "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Total") ?>", "mData": "total", "sType": "string"},
+    { "bVisible": true, "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Total") ?>", "mData": "total", "sType": "string"},
     { "sTitle": "<?= $this->lang->line("Acciones") ?>", "sWidth": "60px", "mData": "id", "bSortable": false, "bSearchable": false, "sType": "html", "mRender" : function( data, type, full ){ 
       return '<ul class="table-actions smart-form">' +         
       '<li><a title="<?= $this->lang->line($this->MApp->secure->edit ? "Editar" : "Ver") ?>" href="<?= base_url() . "{$appController}/{$appFunction}" ?>/element/' + data + '" class="btn btn-xs btn-default edit-button" type="button"><i class="fa fa-actions <?= $this->MApp->secure->edit ? "fa-pencil" : "fa-search" ?>"></i></a></li>' +

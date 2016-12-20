@@ -9,11 +9,7 @@ var DataTableFn = function(){
     <? $this->load->view("script/datatable/order.js") ?>
   };
   configDT.aoColumns = [
-    { "sTitle": "<input class='checkbox-select-all' type='checkbox' />", "sWidth": "10px", "mData": "id", "bSortable": false, "bSearchable": false, "sType": "html", "mRender" : function( data, type, full ){ 
-      return '<span class="checkbox"><input value="" name="" class="checkbox-select-row" type="checkbox"><i></i></span>';
-    }},
-    { "sTitle": "<?= $this->lang->line("ID") ?>", "sWidth": "40px", "mData": "id", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Tamaño") ?>", "mData": "size", "sType": "string"},
+        { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Tamaño") ?>", "mData": "size", "sType": "string"},
     { "sTitle": "<?= $this->lang->line("Acciones") ?>", "sWidth": "60px", "mData": "id", "bSortable": false, "bSearchable": false, "sType": "html", "mRender" : function( data, type, full ){ 
       return '<ul class="table-actions smart-form">' +         
       '<li><a title="<?= $this->lang->line($this->MApp->secure->edit ? "Editar" : "Ver") ?>" href="<?= base_url() . "{$appController}/{$appFunction}" ?>/element/' + data + '" class="btn btn-xs btn-default edit-button" type="button"><i class="fa fa-actions <?= $this->MApp->secure->edit ? "fa-pencil" : "fa-search" ?>"></i></a></li>' +

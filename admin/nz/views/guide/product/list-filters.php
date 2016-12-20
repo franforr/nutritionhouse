@@ -26,14 +26,14 @@
         <label for="promotionFormChk<?= $wgetId ?>" class="checkbox">
           <input id='promotionFormChk<?= $wgetId ?>' value='1' type='checkbox' class='post' name='promotion' />
           <i></i>
-          <?= $this->lang->line('Solo promocións') ?>
+          <?= $this->lang->line('Solo promociones') ?>
         </label>
       </section>
       <section class="col-filter col col-1-5">
         <label for="highlightFormChk<?= $wgetId ?>" class="checkbox">
           <input id='highlightFormChk<?= $wgetId ?>' value='1' type='checkbox' class='post' name='highlight' />
           <i></i>
-          <?= $this->lang->line('Solo destacado en homes') ?>
+          <?= $this->lang->line('Solo destacados') ?>
         </label>
       </section>
       <section class="col-filter col col-1-5">

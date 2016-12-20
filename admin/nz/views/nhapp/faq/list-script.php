@@ -11,12 +11,8 @@ var DataTableFn = function(){
     <? $this->load->view("script/datatable/order.js") ?>
   };
   configDT.aoColumns = [
-    { "sTitle": "<input class='checkbox-select-all' type='checkbox' />", "sWidth": "10px", "mData": "id", "bSortable": false, "bSearchable": false, "sType": "html", "mRender" : function( data, type, full ){ 
-      return '<span class="checkbox"><input value="" name="" class="checkbox-select-row" type="checkbox"><i></i></span>';
-    }},
-    { "sTitle": "<?= $this->lang->line("ID") ?>", "sWidth": "40px", "mData": "id", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Título") ?>", "mData": "title", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Orden") ?>", "mData": "num", "sType": "string"},
+    { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Título") ?>", "mData": "title", "sType": "string"},
+    { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Orden") ?>", "sWidth": "40px","mData": "num", "sType": "string"},
     { "sClass": "text-align-center", "sWidth": "40px", "sTitle": "<?= $this->lang->line("Activo") ?>", "mData": "active", "sType": "html", "mRender" : function( data, type, full ){ 
       if(!data || !parseInt(data)) return '<?= $this->lang->line("No") ?>';
       return '<?= $this->lang->line("Si") ?>';

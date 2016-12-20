@@ -12,17 +12,13 @@ var DataTableFn = function(){
     <? $this->load->view("script/datatable/order.js") ?>
   };
   configDT.aoColumns = [
-    { "sTitle": "<input class='checkbox-select-all' type='checkbox' />", "sWidth": "10px", "mData": "id", "bSortable": false, "bSearchable": false, "sType": "html", "mRender" : function( data, type, full ){ 
-      return '<span class="checkbox"><input value="" name="" class="checkbox-select-row" type="checkbox"><i></i></span>';
-    }},
-    { "sTitle": "<?= $this->lang->line("ID") ?>", "sWidth": "40px", "mData": "id", "sType": "string"},
     { "sTitle": "<?= $this->lang->line("Tipo") ?>", "mData": "type", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Nombre") ?>", "mData": "name", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Código") ?>", "mData": "code", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Valor") ?>", "mData": "value", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Total") ?>", "mData": "total", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Usados") ?>", "mData": "used", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Expiración") ?>", "mData": "expire", "sType": "html", "mRender" : function( data, type, full ){ 
+    { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Nombre") ?>", "mData": "name", "sType": "string"},
+    { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Código") ?>", "mData": "code", "sType": "string"},
+    { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Valor") ?>", "mData": "value", "sType": "string"},
+    { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Total") ?>", "mData": "total", "sType": "string"},
+    { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Usados") ?>", "mData": "used", "sType": "string"},
+    { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Expiración") ?>", "mData": "expire", "sType": "html", "mRender" : function( data, type, full ){ 
       if(!data || data == '0000-00-00') return '-';
       return Date.fromMysql(data).format("dd/MM/yyyy");
     }},

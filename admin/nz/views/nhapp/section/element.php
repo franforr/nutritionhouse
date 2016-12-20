@@ -5,7 +5,7 @@
   <div class="row page-title-row">
         
     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
-      <h1 class="page-title txt-color-blueDark"><i class="page-title-ico <?= $appTitleIco ?>"></i> <?= prep_app_title($appTitle) ?></h1>
+      <h1 class="page-title txt-color-blueDark"><?= $appTitleIco ?><?= prep_app_title($appTitle) ?></h1>
     </div>
       </div>
   <section class="widget-form-content">
@@ -29,18 +29,8 @@
       <fieldset>
         <div class="row">
         
-<? $field = 'section'; $this->load->view('app/form', array('item' => array(
-    'columns' => 4,
-    'form' => $wgetId,
-    'name' => $field,
-    'label' => $this->lang->line('Sección'),
-    'value' => $dataItem[$field],
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'placeholder' => ''
-  ))) ?>
 <? $field = 'title'; $this->load->view('app/form', array('item' => array(
-    'columns' => 4,
+    'columns' => 6,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Título'),
@@ -52,36 +42,10 @@
 <? $field = 'text'; $this->load->view('app/form', array('item' => array(
     'type' => 'textarea',
     'height' => 160,
-    'columns' => 6,
+    'columns' => 8,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Texto'),
-    'value' => $dataItem[$field],
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'placeholder' => ''
-  ))) ?>
-<? $field = 'id_file'; $this->load->view('app/form', array('item' => array(
-    'type' => 'filemanager',
-    'columns' => 4,
-    'form' => $wgetId,
-    'name' => $field,
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'allow-navigation' => isset($gallery['default'][$field]['allow-navigation']) ? $gallery['default'][$field]['allow-navigation'] : false,
-    'default-location' => isset($gallery['default'][$field]['folder']) ? $gallery['default'][$field]['folder'] : ( isset($gallery['folder']) ? $gallery['folder'] : 0 ),
-    'data' => $dataItem,
-    'prefix' => 'fm1',
-    'label' => $this->lang->line('Imagen'),
-    'value' => $dataItem[$field],
-    'placeholder' => ''
-  ))) ?>
-<? $field = 'num'; $this->load->view('app/form', array('item' => array(
-    'type' => 'number',
-    'columns' => 2,
-    'form' => $wgetId,
-    'name' => $field,
-    'label' => $this->lang->line('Orden'),
     'value' => $dataItem[$field],
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),

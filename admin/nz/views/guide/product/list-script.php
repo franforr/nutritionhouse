@@ -19,30 +19,17 @@ var DataTableFn = function(){
     <? $this->load->view("script/datatable/order.js") ?>
   };
   configDT.aoColumns = [
-    { "sTitle": "<input class='checkbox-select-all' type='checkbox' />", "sWidth": "10px", "mData": "id", "bSortable": false, "bSearchable": false, "sType": "html", "mRender" : function( data, type, full ){ 
-      return '<span class="checkbox"><input value="" name="" class="checkbox-select-row" type="checkbox"><i></i></span>';
-    }},
-    { "sTitle": "<?= $this->lang->line("ID") ?>", "sWidth": "40px", "mData": "id", "sType": "string"},
-    { "sTitle": "<?= $this->lang->line("Categoría") ?>", "mData": "category", "sType": "string"},
-    { "sTitle": "<?= $this->lang->line("Stock") ?>", "mData": "state", "sType": "string"},
-    { "sTitle": "<?= $this->lang->line("Tamaño") ?>", "mData": "size", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Título") ?>", "mData": "title", "sType": "string"},
-    { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Precio") ?>", "mData": "cost", "sType": "string"},
-    { "sWidth": "60px", "sClass": "text-align-center widget-filemanager", "sTitle": "<?= $this->lang->line("Imagen") ?>", "mData": "fm1file", "sType":"html", "mRender" : function( data, type, full ){ 
+  { "sWidth": "60px", "sClass": "text-align-center widget-filemanager", "sTitle": "<?= $this->lang->line("Imagen") ?>", "mData": "fm1file", "sType":"html", "mRender" : function( data, type, full ){ 
       var type = 0;
       if(data) type = full["fm1type"];
       return (data ? '<a class="no-propagation" href="<?= upload() ?>'+ full["fm1file"] +'<?= thumb_version() ?>" target="_blank">' : '') + '<div data-type="'+type +'" class="file-info type-'+ type +'"><div class="file-ico">' + ((data  && type == 1) ? '<img src="<?= thumb_url() ?>'+ full["id_file"] +'<?= thumb_version() ?>" />' : '' ) +'</div></div>' + (data ? '</a>' : '');
     }},
-    { "sWidth": "30px", "sClass": "text-align-center td-gallery-items",  "sTitle": "<?= $this->lang->line("Galería") ?>", "mData": "fmg1", "sType": "html", "mRender" : function( data, type, full ){ 
-      if(!full["id_gallery"] || !data || !parseInt(data)) return "<?= $this->lang->line("Vacía") ?>";
-      if(data == 1)
-        return "<?= $this->lang->line("1 elemento") ?>";
-      return "<?= $this->lang->line("{1} elementos") ?>".replace('{1}', data);
-    }},
-    { "sClass": "text-align-center", "sWidth": "40px", "sTitle": "<?= $this->lang->line("Promoción") ?>", "mData": "promotion", "sType": "html", "mRender" : function( data, type, full ){ 
-      if(!data || !parseInt(data)) return '<?= $this->lang->line("No") ?>';
-      return '<?= $this->lang->line("Si") ?>';
-    }},
+    
+     { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Producto") ?>", "mData": "title", "sType": "string"},
+    { "sTitle": "<?= $this->lang->line("Categoría") ?>", "mData": "category", "sType": "string"},
+    { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Precio") ?>", "mData": "cost", "sType": "string"},
+    { "sTitle": "<?= $this->lang->line("Tamaño") ?>", "mData": "size", "sType": "string"},
+    { "sTitle": "<?= $this->lang->line("Stock") ?>", "mData": "state", "sType": "string"},
     { "sClass": "text-align-center", "sWidth": "40px", "sTitle": "<?= $this->lang->line("Destacado en home") ?>", "mData": "highlight", "sType": "html", "mRender" : function( data, type, full ){ 
       if(!data || !parseInt(data)) return '<?= $this->lang->line("No") ?>';
       return '<?= $this->lang->line("Si") ?>';

@@ -5,7 +5,7 @@
   <div class="row page-title-row">
         
     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
-      <h1 class="page-title txt-color-blueDark"><i class="page-title-ico <?= $appTitleIco ?>"></i> <?= prep_app_title($appTitle) ?></h1>
+      <h1 class="page-title txt-color-blueDark"><?= $appTitleIco ?><?= prep_app_title($appTitle) ?></h1>
     </div>
       </div>
   <section class="widget-form-content">
@@ -31,7 +31,7 @@
         
 <? $field = 'id_type'; $this->load->view('app/form', array('item' => array(
     'type' => 'select',
-    'columns' => 2,
+    'columns' => 4,
     'form' => $wgetId,
     'name' => $field,
     'data' => $select['SelectCouponType'],
@@ -63,7 +63,7 @@
   ))) ?>
 <? $field = 'value'; $this->load->view('app/form', array('item' => array(
     'type' => 'number',
-    'columns' => 2,
+    'columns' => 3,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Valor'),
@@ -74,7 +74,7 @@
   ))) ?>
 <? $field = 'total'; $this->load->view('app/form', array('item' => array(
     'type' => 'number',
-    'columns' => 2,
+    'columns' => 3,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Total'),
@@ -85,7 +85,7 @@
   ))) ?>
 <? $field = 'used'; $this->load->view('app/form', array('item' => array(
     'type' => 'number',
-    'columns' => 2,
+    'columns' => 3,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Usados'),
@@ -96,7 +96,7 @@
   ))) ?>
 <? $field = 'expire'; $this->load->view('app/form', array('item' => array(
     'type' => 'date',
-    'columns' => 2,
+    'columns' => 3,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Expiración'),

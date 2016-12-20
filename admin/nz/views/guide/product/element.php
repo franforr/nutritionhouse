@@ -5,7 +5,7 @@
   <div class="row page-title-row">
         
     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
-      <h1 class="page-title txt-color-blueDark"><i class="page-title-ico <?= $appTitleIco ?>"></i> <?= prep_app_title($appTitle) ?></h1>
+      <h1 class="page-title txt-color-blueDark"><?= $appTitleIco ?><?= prep_app_title($appTitle) ?></h1>
     </div>
       </div>
   <section class="widget-form-content">
@@ -28,10 +28,53 @@
     <div class="well-white smart-form">
       <fieldset>
         <div class="row">
-        
+
+ <? $field = 'title'; $this->load->view('app/form', array('item' => array(
+    'columns' => 6,
+    'form' => $wgetId,
+    'name' => $field,
+    'label' => $this->lang->line('Título'),
+    'value' => $dataItem[$field],
+    'error' => $this->validation->error($field),
+    'class' => $this->validation->error_class($field),
+    'placeholder' => ''
+  ))) ?>   
+  <? $field = 'cost'; $this->load->view('app/form', array('item' => array(
+    'type' => 'number',
+    'columns' => 2,
+    'form' => $wgetId,
+    'name' => $field,
+    'label' => $this->lang->line('Precio'),
+    'value' => $dataItem[$field],
+    'error' => $this->validation->error($field),
+    'class' => $this->validation->error_class($field),
+    'placeholder' => ''
+  ))) ?>
+  <? $field = 'promotion'; $this->load->view('app/form', array('item' => array(
+    'columns' => 2,
+    'type' => 'checkbox',
+    'form' => $wgetId,
+    'name' => $field,
+    'label' => $this->lang->line('Promoción'),
+    'value' => $field,
+    'error' => $this->validation->error($field),
+    'class' => $this->validation->error_class($field),
+    'checked' => ($dataItem[$field] > 0)
+  ))) ?>  
+  <? $field = 'highlight'; $this->load->view('app/form', array('item' => array(
+    'columns' => 2,
+    'type' => 'checkbox',
+    'form' => $wgetId,
+    'name' => $field,
+    'label' => $this->lang->line('Destacado'),
+    'value' => $field,
+    'error' => $this->validation->error($field),
+    'class' => $this->validation->error_class($field),
+    'checked' => ($dataItem[$field] > 0)
+  ))) ?>  
 <? $field = 'id_category'; $this->load->view('app/form', array('item' => array(
     'type' => 'select',
-    'columns' => 2,
+    'columns' => 5,
     'form' => $wgetId,
     'name' => $field,
     'data' => $select['SelectProductCategory'],
@@ -41,21 +84,10 @@
     'value' => $dataItem[$field],
     'placeholder' => ''
   ))) ?>
-<? $field = 'id_state'; $this->load->view('app/form', array('item' => array(
-    'type' => 'select',
-    'columns' => 2,
-    'form' => $wgetId,
-    'name' => $field,
-    'data' => $select['SelectProductState'],
-    'label' => $this->lang->line('Stock'),
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'value' => $dataItem[$field],
-    'placeholder' => ''
-  ))) ?>
+
 <? $field = 'id_size'; $this->load->view('app/form', array('item' => array(
     'type' => 'select',
-    'columns' => 2,
+    'columns' => 4,
     'form' => $wgetId,
     'name' => $field,
     'data' => $select['SelectProductSize'],
@@ -65,34 +97,25 @@
     'value' => $dataItem[$field],
     'placeholder' => ''
   ))) ?>
-<? $field = 'title'; $this->load->view('app/form', array('item' => array(
-    'columns' => 4,
+  <? $field = 'id_state'; $this->load->view('app/form', array('item' => array(
+    'type' => 'select',
+    'columns' => 3,
     'form' => $wgetId,
     'name' => $field,
-    'label' => $this->lang->line('Título'),
-    'value' => $dataItem[$field],
+    'data' => $select['SelectProductState'],
+    'label' => $this->lang->line('Stock'),
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),
+    'value' => $dataItem[$field],
     'placeholder' => ''
   ))) ?>
 <? $field = 'text'; $this->load->view('app/form', array('item' => array(
     'type' => 'textarea',
     'height' => 160,
-    'columns' => 6,
+    'columns' => 10,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Descripción'),
-    'value' => $dataItem[$field],
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'placeholder' => ''
-  ))) ?>
-<? $field = 'cost'; $this->load->view('app/form', array('item' => array(
-    'type' => 'number',
-    'columns' => 2,
-    'form' => $wgetId,
-    'name' => $field,
-    'label' => $this->lang->line('Precio'),
     'value' => $dataItem[$field],
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),
@@ -128,28 +151,8 @@
     'value' => $dataItem[$field],
     'placeholder' => ''
   ))) ?>
-<? $field = 'promotion'; $this->load->view('app/form', array('item' => array(
-    'columns' => 2,
-    'type' => 'checkbox',
-    'form' => $wgetId,
-    'name' => $field,
-    'label' => $this->lang->line('Promoción'),
-    'value' => $field,
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'checked' => ($dataItem[$field] > 0)
-  ))) ?>
-<? $field = 'highlight'; $this->load->view('app/form', array('item' => array(
-    'columns' => 2,
-    'type' => 'checkbox',
-    'form' => $wgetId,
-    'name' => $field,
-    'label' => $this->lang->line('Destacado en home'),
-    'value' => $field,
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'checked' => ($dataItem[$field] > 0)
-  ))) ?>
+
+
 </div>
 <div style="margin-top: 15px">
   <? $field = 'id_product_related'; $this->load->view('app/form', array('item' => array(

@@ -5,7 +5,7 @@
   <div class="row page-title-row">
         
     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
-      <h1 class="page-title txt-color-blueDark"><i class="page-title-ico <?= $appTitleIco ?>"></i> <?= prep_app_title($appTitle) ?></h1>
+      <h1 class="page-title txt-color-blueDark"><?= $appTitleIco ?><?= prep_app_title($appTitle) ?></h1>
     </div>
       </div>
   <section class="widget-form-content">
@@ -30,7 +30,7 @@
         <div class="row">
         
 <? $field = 'category'; $this->load->view('app/form', array('item' => array(
-    'columns' => 4,
+    'columns' => 8,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Categoría'),
@@ -41,7 +41,7 @@
   ))) ?>
 <? $field = 'id_file'; $this->load->view('app/form', array('item' => array(
     'type' => 'filemanager',
-    'columns' => 4,
+    'columns' => 12,
     'form' => $wgetId,
     'name' => $field,
     'error' => $this->validation->error($field),
@@ -55,7 +55,7 @@
     'placeholder' => ''
   ))) ?>
 <? $field = 'highlight'; $this->load->view('app/form', array('item' => array(
-    'columns' => 2,
+    'columns' => 4,
     'type' => 'checkbox',
     'form' => $wgetId,
     'name' => $field,

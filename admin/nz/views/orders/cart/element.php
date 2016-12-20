@@ -4,7 +4,7 @@
   <input type="hidden" value="0" name="goback" class="form-post-goback" />
   <div class="row page-title-row">
         <div class="col-xs-12 col-sm-10 col-md-10 col-lg-8">
-      <h1 class="page-title txt-color-blueDark"><i class="page-title-ico <?= $appTitleIco ?>"></i> <?= prep_app_title($appTitle) ?></h1>
+      <h1 class="page-title txt-color-blueDark"><?= $appTitleIco ?><?= prep_app_title($appTitle) ?></h1>
     </div>
     <? $this->load->view("app/element/buttons-header", array('alt' => true)) ?>   
       </div>
@@ -15,44 +15,18 @@
     <div class="well-white smart-form">
       <fieldset>
         <div class="row">
-        
-<? $field = 'id_gim'; $this->load->view('app/form', array('item' => array(
-    'type' => 'select',
-    'columns' => 2,
+
+<? $field = 'mail'; $this->load->view('app/form', array('item' => array(
+    'columns' => 4,
     'form' => $wgetId,
     'name' => $field,
-    'data' => $select['SelectGim'],
-    'label' => $this->lang->line('Gimnasio'),
+    'label' => $this->lang->line('E-mail'),
+    'value' => $dataItem[$field],
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),
-    'value' => $dataItem[$field],
     'placeholder' => ''
-  ))) ?>
-<? $field = 'id_state'; $this->load->view('app/form', array('item' => array(
-    'type' => 'select',
-    'columns' => 2,
-    'form' => $wgetId,
-    'name' => $field,
-    'data' => $select['SelectCartState'],
-    'label' => $this->lang->line('Estado'),
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'value' => $dataItem[$field],
-    'placeholder' => ''
-  ))) ?>
-<? $field = 'id_shipping'; $this->load->view('app/form', array('item' => array(
-    'type' => 'select',
-    'columns' => 2,
-    'form' => $wgetId,
-    'name' => $field,
-    'data' => $select['SelectCartShipping'],
-    'label' => $this->lang->line('Envío'),
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'value' => $dataItem[$field],
-    'placeholder' => ''
-  ))) ?>
-<? $field = 'name'; $this->load->view('app/form', array('item' => array(
+  ))) ?>  
+  <? $field = 'name'; $this->load->view('app/form', array('item' => array(
     'columns' => 4,
     'form' => $wgetId,
     'name' => $field,
@@ -71,8 +45,8 @@
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),
     'placeholder' => ''
-  ))) ?>
-<? $field = 'address'; $this->load->view('app/form', array('item' => array(
+  ))) ?>   
+  <? $field = 'address'; $this->load->view('app/form', array('item' => array(
     'columns' => 4,
     'form' => $wgetId,
     'name' => $field,
@@ -121,17 +95,45 @@
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),
     'placeholder' => ''
-  ))) ?>
-<? $field = 'mail'; $this->load->view('app/form', array('item' => array(
+  ))) ?>   
+<? $field = 'id_gim'; $this->load->view('app/form', array('item' => array(
+    'type' => 'select',
     'columns' => 4,
     'form' => $wgetId,
     'name' => $field,
-    'label' => $this->lang->line('E-mail'),
-    'value' => $dataItem[$field],
+    'data' => $select['SelectGim'],
+    'label' => $this->lang->line('Gimnasio'),
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),
+    'value' => $dataItem[$field],
     'placeholder' => ''
   ))) ?>
+<? $field = 'id_state'; $this->load->view('app/form', array('item' => array(
+    'type' => 'select',
+    'columns' => 4,
+    'form' => $wgetId,
+    'name' => $field,
+    'data' => $select['SelectCartState'],
+    'label' => $this->lang->line('Estado'),
+    'error' => $this->validation->error($field),
+    'class' => $this->validation->error_class($field),
+    'value' => $dataItem[$field],
+    'placeholder' => ''
+  ))) ?>
+<? $field = 'id_shipping'; $this->load->view('app/form', array('item' => array(
+    'type' => 'select',
+    'columns' => 4,
+    'form' => $wgetId,
+    'name' => $field,
+    'data' => $select['SelectCartShipping'],
+    'label' => $this->lang->line('Envío'),
+    'error' => $this->validation->error($field),
+    'class' => $this->validation->error_class($field),
+    'value' => $dataItem[$field],
+    'placeholder' => ''
+  ))) ?>
+
+
 <? $field = 'created'; $this->load->view('app/form', array('item' => array(
     'columns' => 2,
     'form' => $wgetId,
@@ -165,7 +167,7 @@
     'placeholder' => ''
   ))) ?>
 <? $field = 'coupon_1'; $this->load->view('app/form', array('item' => array(
-    'columns' => 4,
+    'columns' => 2,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Descuento'),
@@ -176,7 +178,7 @@
   ))) ?>
 <? $field = 'subtotal'; $this->load->view('app/form', array('item' => array(
     'type' => 'number',
-    'columns' => 2,
+    'columns' => 4,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Subtotal'),
@@ -198,7 +200,7 @@
   ))) ?>
 <? $field = 'total'; $this->load->view('app/form', array('item' => array(
     'type' => 'number',
-    'columns' => 2,
+    'columns' => 4,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Total'),
