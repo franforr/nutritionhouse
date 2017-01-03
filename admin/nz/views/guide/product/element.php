@@ -55,7 +55,7 @@
     'type' => 'checkbox',
     'form' => $wgetId,
     'name' => $field,
-    'label' => $this->lang->line('Promoción'),
+    'label' => $this->lang->line('En promoción'),
     'value' => $field,
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),

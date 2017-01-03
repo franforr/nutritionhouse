@@ -11,7 +11,7 @@ var DataTableFn = function(){
     <? $this->load->view("script/datatable/order.js") ?>
   };
   configDT.aoColumns = [
-    { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Sección") ?>", "mData": "section", "sType": "string"},
+    { "sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Sección") ?>", "mData": "title", "sType": "string"},
     { "sClass": "text-align-center", "sWidth": "40px", "sTitle": "<?= $this->lang->line("Activo") ?>", "mData": "active", "sType": "html", "mRender" : function( data, type, full ){ 
       if(!data || !parseInt(data)) return '<?= $this->lang->line("No") ?>';
       return '<?= $this->lang->line("Si") ?>';

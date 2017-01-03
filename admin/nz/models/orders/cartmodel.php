@@ -204,25 +204,9 @@ class CartModel extends AppModel {
   {
     if(!$this->MApp->secure->edit) return;
     $data = array(
-      'id_gim' => $this->input->post('id_gim'),
-      'id_state' => $this->input->post('id_state'),
-      'id_shipping' => $this->input->post('id_shipping'),
-      'name' => $this->input->post('name'),
-      'lastname' => $this->input->post('lastname'),
-      'address' => $this->input->post('address'),
-      'postal_code' => $this->input->post('postal_code'),
-      'province' => $this->input->post('province'),
-      'city' => $this->input->post('city'),
-      'phone' => $this->input->post('phone'),
-      'mail' => $this->input->post('mail'),
-      'created' => $this->input->post('created'),
-      'modified' => $this->input->post('modified'),
-      'comments' => $this->input->post('comments'),
-      'coupon_1' => $this->input->post('coupon_1'),
-      'subtotal' => $this->input->post('subtotal'),
-      'desc1' => $this->input->post('desc1'),
-      'total' => $this->input->post('total'),
-    );
+                  'id_state' => $this->input->post('id_state'),
+                  'comments' => $this->input->post('comments'),
+                  );
     if( $this->id )
       $sql = $this->db->update_string($this->table, $data, "id_cart = '{$this->id}'" );
     else

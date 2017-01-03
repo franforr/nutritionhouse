@@ -10,11 +10,13 @@ class nhapp extends AppController {
     parent::__construct();
     $this->cfg['title'] = $this->lang->line('Aplicación');
   }
-
+
+
   public function section()
   {
     $this->cfg['subtitle'] = $this->lang->line('Secciones');
     $this->cfg['folder'] = 2;
+    $this->cfg['new-element'] = false;
     $this->load->library("abm", $this->cfg);
   }
 

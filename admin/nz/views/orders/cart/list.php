@@ -5,11 +5,6 @@
       <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
         <h1 class="page-title txt-color-blueDark"><?= $appTitleIco ?><?= prep_app_title($appTitle) ?></h1>
       </div>
-      <? if($this->MApp->secure->edit && $this->model->mconfig['new-element']):?>
-      <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 text-right button-right">
-        <a class="btn btn-primary pull-right app-loader" href="<?= base_url() . "{$appController}/{$appFunction}" ?>/new"><?= $this->lang->line("Agregar nuevo") ?></a>
-      </div>
-      <? endif ?>
     </div>
     <div class="clear-sm"></div>
     <section>

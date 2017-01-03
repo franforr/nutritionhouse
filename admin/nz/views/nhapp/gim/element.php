@@ -70,7 +70,7 @@
     'default-location' => isset($gallery['default'][$field]['folder']) ? $gallery['default'][$field]['folder'] : ( isset($gallery['folder']) ? $gallery['folder'] : 0 ),
     'data' => $dataItem,
     'prefix' => 'fm1',
-    'label' => $this->lang->line('Imagen'),
+    'label' => $this->lang->line('Logo'),
     'value' => $dataItem[$field],
     'placeholder' => ''
   ))) ?>

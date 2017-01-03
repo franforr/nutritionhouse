@@ -18,6 +18,7 @@
 
 <? $field = 'mail'; $this->load->view('app/form', array('item' => array(
     'columns' => 4,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('E-mail'),
@@ -28,6 +29,7 @@
   ))) ?>  
   <? $field = 'name'; $this->load->view('app/form', array('item' => array(
     'columns' => 4,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Nombre'),
@@ -38,6 +40,7 @@
   ))) ?>
 <? $field = 'lastname'; $this->load->view('app/form', array('item' => array(
     'columns' => 4,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Apellido'),
@@ -48,6 +51,7 @@
   ))) ?>   
   <? $field = 'address'; $this->load->view('app/form', array('item' => array(
     'columns' => 4,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Dirección'),
@@ -58,6 +62,7 @@
   ))) ?>
 <? $field = 'postal_code'; $this->load->view('app/form', array('item' => array(
     'columns' => 4,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Código Postal'),
@@ -68,6 +73,7 @@
   ))) ?>
 <? $field = 'province'; $this->load->view('app/form', array('item' => array(
     'columns' => 4,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Provincia'),
@@ -78,6 +84,7 @@
   ))) ?>
 <? $field = 'city'; $this->load->view('app/form', array('item' => array(
     'columns' => 4,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Ciudad'),
@@ -88,6 +95,7 @@
   ))) ?>
 <? $field = 'phone'; $this->load->view('app/form', array('item' => array(
     'columns' => 4,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Teléfono'),
@@ -99,6 +107,7 @@
 <? $field = 'id_gim'; $this->load->view('app/form', array('item' => array(
     'type' => 'select',
     'columns' => 4,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'data' => $select['SelectGim'],
@@ -123,6 +132,7 @@
 <? $field = 'id_shipping'; $this->load->view('app/form', array('item' => array(
     'type' => 'select',
     'columns' => 4,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'data' => $select['SelectCartShipping'],
@@ -136,6 +146,7 @@
 
 <? $field = 'created'; $this->load->view('app/form', array('item' => array(
     'columns' => 2,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Fecha creación'),
@@ -146,6 +157,7 @@
   ))) ?>
 <? $field = 'modified'; $this->load->view('app/form', array('item' => array(
     'columns' => 2,
+    'disabled' => true,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Fecha modificación'),
@@ -166,49 +178,7 @@
     'class' => $this->validation->error_class($field),
     'placeholder' => ''
   ))) ?>
-<? $field = 'coupon_1'; $this->load->view('app/form', array('item' => array(
-    'columns' => 2,
-    'form' => $wgetId,
-    'name' => $field,
-    'label' => $this->lang->line('Descuento'),
-    'value' => $dataItem[$field],
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'placeholder' => ''
-  ))) ?>
-<? $field = 'subtotal'; $this->load->view('app/form', array('item' => array(
-    'type' => 'number',
-    'columns' => 4,
-    'form' => $wgetId,
-    'name' => $field,
-    'label' => $this->lang->line('Subtotal'),
-    'value' => $dataItem[$field],
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'placeholder' => ''
-  ))) ?>
-<? $field = 'desc1'; $this->load->view('app/form', array('item' => array(
-    'type' => 'number',
-    'columns' => 2,
-    'form' => $wgetId,
-    'name' => $field,
-    'label' => $this->lang->line('Descuento'),
-    'value' => $dataItem[$field],
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'placeholder' => ''
-  ))) ?>
-<? $field = 'total'; $this->load->view('app/form', array('item' => array(
-    'type' => 'number',
-    'columns' => 4,
-    'form' => $wgetId,
-    'name' => $field,
-    'label' => $this->lang->line('Total'),
-    'value' => $dataItem[$field],
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'placeholder' => ''
-  ))) ?>
+
       </div>
       </fieldset>
       <div class="clear-sm"></div>

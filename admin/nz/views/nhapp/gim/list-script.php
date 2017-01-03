@@ -14,7 +14,7 @@ var DataTableFn = function(){
     { "sWidth": "160px","sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Nombre") ?>", "mData": "name", "sType": "string"},
     { "sWidth": "100px","sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Código") ?>", "mData": "code", "sType": "string"},
     { "sWidth": "100px","sClass": "text-align-center1", "sTitle": "<?= $this->lang->line("Contraseña") ?>", "mData": "password", "sType": "string"},
-    { "sWidth": "60px", "sClass": "text-align-center widget-filemanager", "sTitle": "<?= $this->lang->line("Imagen") ?>", "mData": "fm1file", "sType":"html", "mRender" : function( data, type, full ){ 
+    { "sWidth": "60px", "sClass": "text-align-center widget-filemanager", "sTitle": "<?= $this->lang->line("Logo") ?>", "mData": "fm1file", "sType":"html", "mRender" : function( data, type, full ){ 
       var type = 0;
       if(data) type = full["fm1type"];
       return (data ? '<a class="no-propagation" href="<?= upload() ?>'+ full["fm1file"] +'<?= thumb_version() ?>" target="_blank">' : '') + '<div data-type="'+type +'" class="file-info type-'+ type +'"><div class="file-ico">' + ((data  && type == 1) ? '<img src="<?= thumb_url() ?>'+ full["id_file"] +'<?= thumb_version() ?>" />' : '' ) +'</div></div>' + (data ? '</a>' : '');

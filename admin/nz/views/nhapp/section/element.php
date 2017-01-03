@@ -60,6 +60,11 @@
 </form>
 </div>
 <? $this->load->view("script/filemanager/includes") ?>
+
+<!-- include summernote css/js-->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
+
 <script>
 $(document).ready(function() {
   var formGlobal = $('#widget-form-<?= $wgetId ?>');  
@@ -106,5 +111,19 @@ $(document).ready(function() {
   ))) ?>
   
 });
+
+setTimeout(function() {
+  var summernote = $('[name="text"]');
+  if(summernote.length) {
+    summernote.each(function(i,el) {
+      $(el).summernote({
+        popover: false,
+        height: 300
+      });
+    });
+  }
+},300);
+
+
 </script>
 <? $this->load->view("common/footer") ?>
