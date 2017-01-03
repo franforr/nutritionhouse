@@ -29,7 +29,7 @@ class Api extends CI_Controller {
     $homeproducts = $this->Api->GetHomeProducts();
     $sections = $this->Api->GetSection();
     $faq = $this->Api->GetFaq();
-    $cart = $this->Cart->Start(15);
+    $cart = $this->Cart->Start(7);
     
     // sistema de cache via json como en infonews
 
@@ -68,7 +68,7 @@ class Api extends CI_Controller {
     $idc = $this->uri->segment(3,0) ? $this->uri->segment(3,0) : false;
     
 
-    $category = $this->Api->GetProducts($idc);
+    $category = $this->Api->GetProducts(false,$idc,8,0);
     $title = $this->Api->GetCatTitle($idc);
     if(!$title)
       die('error');
@@ -136,7 +136,7 @@ public function search()
   {
     $this->load->model('ApiModel', 'Api');
 
-    $search = $this->Api->GetProducts($this->input->post('keyword'));
+    $search = $this->Api->GetProducts($this->input->post('keyword'), false, 8, 0);
 
    foreach ($search as $key => $value)
     {

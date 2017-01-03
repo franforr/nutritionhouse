@@ -63,14 +63,16 @@ public function GetCatTitle($id_category = 0)
     return $this->db->query($sql)->row();
   }
 
-  public function GetProducts($keyword = false, $id_category = false)
+  public function GetProducts( $keyword = false, $id_category = false, $limit = 0, $start = 0)
   {
-    $sql = "select p.id_product as id, p.title as title, p.text as text, p.cost as price, f.file
+    $sql = "select p.id_product as id, p.id_category as category, p.title as title, p.text as text, p.cost as price, f.file
     from product p
     left join nz_file f on f.id_file = p.id_file
     where p.active = '1'";
-    if($id_category) $sql .= "AND where p.id_category = '{$id_category}'"; 
-    if($keyword) $sql .= "AND p.title LIKE '%{$keyword}%' OR p.text LIKE '%{$keyword}%'";
+    if($id_category) $sql .= " AND p.id_category = '{$id_category}'"; 
+    if($keyword) $sql .= " AND p.title LIKE '%{$keyword}%' OR p.text LIKE '%{$keyword}%'";
+    if($limit>0) $sql .= " LIMIT $start,$limit";
+
        
     return $this->db->query($sql)->result();
   }
