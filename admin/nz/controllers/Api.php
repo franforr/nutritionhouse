@@ -67,8 +67,11 @@ class Api extends CI_Controller {
 
     $idc = $this->uri->segment(3,0) ? $this->uri->segment(3,0) : false;
     
+    $page = (int)$this->input->post('page');
+    $limit = 8;
+    $start = ($limit + 1) * $page;
 
-    $category = $this->Api->GetProducts(false,$idc,8,0);
+    $category = $this->Api->GetProducts(false,$idc,$limit,$start);
     $title = $this->Api->GetCatTitle($idc);
     if(!$title)
       die('error');
@@ -136,7 +139,11 @@ public function search()
   {
     $this->load->model('ApiModel', 'Api');
 
-    $search = $this->Api->GetProducts($this->input->post('keyword'), false, 8, 0);
+    $page = (int)$this->input->post('page');
+    $limit = 8;
+    $start = ($limit + 1) * $page;
+
+    $search = $this->Api->GetProducts($this->input->post('keyword'), false, $limit, $start);
 
    foreach ($search as $key => $value)
     {
