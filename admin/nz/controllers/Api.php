@@ -16,7 +16,6 @@ class Api extends CI_Controller {
     parent::__construct();
     $this->load->config('app', TRUE);
     $this->load->library('Encryption');
-
     $this->load->model('ApiModel', 'Api');
     $this->load->model('CartModel', 'Cart');
   }
@@ -50,11 +49,11 @@ class Api extends CI_Controller {
     $data['cart'] = $cart;
 
 
-    echo '<pre>';
-    print_r($data);
-    echo '</pre>';
+    // echo '<pre>';
+    // print_r($data);
+    // echo '</pre>';
 
-    // echo json_encode($data);
+    echo json_encode($data);
     
     return;
 
@@ -86,11 +85,11 @@ class Api extends CI_Controller {
     $data['products'] = $category;
     
 
-    echo '<pre>';
-    print_r($data);
-    echo '</pre>';
+    // echo '<pre>';
+    // print_r($data);
+    // echo '</pre>';
 
-    // echo json_encode($data);
+    echo json_encode($data);
     
     return;
 
@@ -125,11 +124,11 @@ class Api extends CI_Controller {
     }
     
 
-    echo '<pre>';
-    print_r($data);
-    echo '</pre>';
+    // echo '<pre>';
+    // print_r($data);
+    // echo '</pre>';
 
-    // echo json_encode($data);
+    echo json_encode($data);
     
     return;
 
@@ -156,11 +155,11 @@ public function search()
     $data = [];
     $data['search'] = $search;
 
-    echo '<pre>';
-    print_r($data);
-    echo '</pre>';
+    // echo '<pre>';
+    // print_r($data);
+    // echo '</pre>';
 
-    // echo json_encode($data);
+    echo json_encode($data);
     
     return;
 

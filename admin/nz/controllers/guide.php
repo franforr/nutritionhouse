@@ -7,10 +7,12 @@ class guide extends AppController {
 
   public function __construct()
   {
+
     parent::__construct();
     $this->cfg['title'] = $this->lang->line('Productos');
   }
-
+
+
   public function product()
   {
     $this->cfg['subtitle'] = $this->lang->line('Listado');
