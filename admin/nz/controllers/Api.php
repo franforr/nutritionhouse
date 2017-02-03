@@ -16,6 +16,7 @@ class Api extends CI_Controller {
     parent::__construct();
     $this->load->config('app', TRUE);
     $this->load->library('Encryption');
+    $this->load->model('AppMainModel', 'MApp');  
     $this->load->model('ApiModel', 'Api');
     $this->load->model('CartModel', 'Cart');
   }
@@ -25,9 +26,10 @@ class Api extends CI_Controller {
   {
 
     $categories = $this->Api->GetCategories();
-    $homeproducts = $this->Api->GetHomeProducts();
+    $sliderhome = $this->Api->GetSlider();
     $sections = $this->Api->GetSection();
     $faq = $this->Api->GetFaq();
+    $sizes = $this->Api->SelectSize();
     $cart = $this->Cart->Start(7);
     
     // sistema de cache via json como en infonews
@@ -36,17 +38,19 @@ class Api extends CI_Controller {
       $categories[$key]->file = $value->file ? thumb($value->file,500,500) : false;
     }
 
-		foreach ($homeproducts as $key => $value) {
-      $homeproducts[$key]->file = $value->file ? thumb($value->file,500,500) : false;
+		foreach ($sliderhome as $key => $value) {
+      $sliderhome[$key]->file = $value->file ? thumb($value->file,650,388) : false;
+      $sliderhome[$key]->subtitle = substr($value->subtitle, 0, 76);
     }
     
 
     $data = [];
     $data['categories'] = $categories;
-    $data['homeproducts'] = $homeproducts;
+    $data['sliderhome'] = $sliderhome;
     $data['sections'] = $sections;
     $data['faq'] = $faq;
     $data['cart'] = $cart;
+    $data['sizes'] = $sizes;
 
 
     // echo '<pre>';
@@ -60,40 +64,39 @@ class Api extends CI_Controller {
   }
 
 
- public function category()
-  {
-    $this->load->model('ApiModel', 'Api');
+ // public function search()
+ //  {
+ //    $this->load->model('ApiModel', 'Api');
 
-    $idc = $this->uri->segment(3,0) ? $this->uri->segment(3,0) : false;
+ //    $idc = $this->input->post('id_category') ? $this->input->post('id_category') : false;
     
-    $page = (int)$this->input->post('page');
-    $limit = 8;
-    $start = ($limit + 1) * $page;
+ //    $page = (int)$this->input->post('page');
+ //    $limit = 8;
+ //    $start = ($limit + 1) * $page;
 
-    $category = $this->Api->GetProducts(false,$idc,$limit,$start);
-    $title = $this->Api->GetCatTitle($idc);
-    if(!$title)
-      die('error');
+ //    $products = $this->Api->GetProducts(false,$idc,$limit,$start);
+ //    $title = $this->Api->GetCatTitle($idc);
+ //    if(!$title)
+ //      die('error');
 
-    foreach ($category as $key => $value) {
-      $category[$key]->file = $value->file ? thumb($value->file,500,500) : false;
-    }
-    
-
-    $data = [];
-    $data['title'] = $title->title;
-    $data['products'] = $category;
+ //    foreach ($products as $key => $value) {
+ //      $products[$key]->file = $value->file ? thumb($value->file,500,500) : false;
+ //    }
     
 
-    // echo '<pre>';
-    // print_r($data);
-    // echo '</pre>';
-
-    echo json_encode($data);
+ //    $data = [];
+ //    $data['products'] = $products;
     
-    return;
 
-  }
+ //    // echo '<pre>';
+ //    // print_r($data);
+ //    // echo '</pre>';
+
+ //    echo json_encode($data);
+    
+ //    return;
+
+ //  }
 
   public function product()
   {
@@ -106,8 +109,17 @@ class Api extends CI_Controller {
     
 
     $product->file = $product->file ? thumb($product->file,500,500) : false;
-    
 
+    $gallery = $this->Api->gallery($product->id_gallery);
+    $product->gallery = count($gallery) ? $gallery : false;
+    $product->price = round($product->price);
+
+    if ($product->gallery) {
+      foreach ($product->gallery as $key => $value) {
+        $product->gallery[$key]->file = $value->file ? thumb($value->file,500,500) : false;
+      }
+    }
+    
     $data = [];
     $related = json_decode($product->related);
     unset($product->related);
@@ -116,7 +128,8 @@ class Api extends CI_Controller {
 
     foreach ($related as $r) {
       $product = $this->Api->GetProduct($r);
-      $product->file = $product->file ? thumb($product->file,500,500) : false;
+      $product->file = $product->file ? thumb($product->file,500,500) : 'img/default.svg';
+      $product->price = round($product->price);;
       if($product)
       {
         $data['related'][] = $product;
@@ -138,22 +151,37 @@ public function search()
   {
     $this->load->model('ApiModel', 'Api');
 
+    $idc = $this->input->post('id_category') ? $this->input->post('id_category') : false;
+
+    $filters = array(
+      'id_category' => $this->input->post('id_category') ? $this->input->post('id_category') : '',
+      'keyword' => $this->input->post('keyword') ? $this->input->post('keyword') : '',
+      'size' => $this->input->post('filter_size') ? $this->input->post('filter_size') : '',
+      'price' => $this->input->post('filter_price') ? $this->input->post('filter_price') : '',
+    );
+
+    $order = array(
+      'order' => $this->input->post('order') ? $this->input->post('order') : '',
+      'direction' => $this->input->post('order_direction') ? $this->input->post('order_direction') : ''
+    );
+
     $page = (int)$this->input->post('page');
-    $limit = 8;
-    $start = ($limit + 1) * $page;
+    $perpage = 8;
+    $start = ($perpage) * $page;
 
-    $search = $this->Api->GetProducts($this->input->post('keyword'), false, $limit, $start);
+    $search = $this->Api->GetProducts($filters, $order, $perpage, $start);
+    $result = $search['result'];
 
-   foreach ($search as $key => $value)
+    foreach ($result as $key => $value)
     {
-
-    $search[$key]->file = $value->file ? thumb($value->file,500,500) : false;
-
+      $result[$key]->file = $value->file ? thumb($value->file,500,500) : 'img/default.svg';
+      $result[$key]->price = round($value->price);
     }
 
 
     $data = [];
-    $data['search'] = $search;
+    $data['products'] = $result;
+    $data['more'] = $search['count'] - $start - $perpage;
 
     // echo '<pre>';
     // print_r($data);
@@ -330,6 +358,6 @@ public function confirm_buy() {
 
       } 
 
-}
-}
+    }
+  }
 }

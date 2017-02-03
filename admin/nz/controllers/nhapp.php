@@ -33,5 +33,12 @@ class nhapp extends AppController {
     $this->cfg['folder'] = 11;
     $this->load->library("abm", $this->cfg);
   }
+
+  public function slider()
+  {
+    $this->cfg['subtitle'] = $this->lang->line('Slider');
+    $this->cfg['folder'] = 13;
+    $this->load->library("abm", $this->cfg);
+  }
 
 }
