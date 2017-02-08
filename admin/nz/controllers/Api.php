@@ -30,7 +30,7 @@ class Api extends CI_Controller {
     $sections = $this->Api->GetSection();
     $faq = $this->Api->GetFaq();
     $sizes = $this->Api->SelectSize();
-    $cart = $this->Cart->Start(7);
+    // $cart = $this->Cart->Start(7);
     
     // sistema de cache via json como en infonews
 
@@ -38,20 +38,23 @@ class Api extends CI_Controller {
       $categories[$key]->file = $value->file ? thumb($value->file,500,500) : false;
     }
 
-		foreach ($sliderhome as $key => $value) {
+    foreach ($sliderhome as $key => $value) {
       $sliderhome[$key]->file = $value->file ? thumb($value->file,650,388) : false;
       $sliderhome[$key]->subtitle = substr($value->subtitle, 0, 76);
     }
     
-
+		foreach ($sections as $key => $value) {
+      $sections[$key]->accordion = false;
+      if($value->id == 10) {
+        $sections[$key]->accordion = $faq;
+      }
+    }
+    
     $data = [];
     $data['categories'] = $categories;
     $data['sliderhome'] = $sliderhome;
     $data['sections'] = $sections;
-    $data['faq'] = $faq;
-    $data['cart'] = $cart;
     $data['sizes'] = $sizes;
-
 
     // echo '<pre>';
     // print_r($data);
@@ -103,7 +106,6 @@ class Api extends CI_Controller {
     $this->load->model('ApiModel', 'Api');
 
     $idp = $this->uri->segment(3,0) ? $this->uri->segment(3,0) : false;
-    
 
     $product = $this->Api->GetProduct($idp);
     
@@ -142,9 +144,8 @@ class Api extends CI_Controller {
     // echo '</pre>';
 
     echo json_encode($data);
-    
-    return;
 
+    return;
   }
 
 public function search()
@@ -193,75 +194,68 @@ public function search()
 
   }
 
-  public function add_item_cart()
-  {
-    if($this->input->post())
-    {
-     $this->Cart->id = (int)$this->input->post('id_cart');
-     $id_product = (int)$this->input->post('id_product');
-     $amount = (int)$this->input->post('amount');
+  // public function add_item_cart()
+  // {
+  //   if($this->input->post())
+  //   {
+  //    $this->Cart->id = (int)$this->input->post('id_cart');
+  //    $id_product = (int)$this->input->post('id_product');
+  //    $amount = (int)$this->input->post('amount');
 
-      if( !is_int($id_product) || !is_int($amount)) return;
+  //     if( !is_int($id_product) || !is_int($amount)) return;
 
-      $r = $this->Cart->AddProduct($id_product,$amount);
+  //     $r = $this->Cart->AddProduct($id_product,$amount);
 
-      echo json_encode(array( 'error'=>!$r, 'cart'=> $this->Cart->GetCart() ));
-    }
+  //     echo json_encode(array( 'error'=>!$r, 'cart'=> $this->Cart->GetCart() ));
+  //   }
 
-  }
+  // }
 
-    public function remove_item_cart()
-    {
-       if($this->input->post())
-        {
-          $this->Cart->id = (int)$this->input->post('id_cart');
-          $id_item = (int)$this->input->post('id_item');
-          if( !is_int($id_item) ) return;
+    // public function remove_item_cart()
+    // {
+    //    if($this->input->post())
+    //     {
+    //       $this->Cart->id = (int)$this->input->post('id_cart');
+    //       $id_item = (int)$this->input->post('id_item');
+    //       if( !is_int($id_item) ) return;
 
-          $h = $this->Cart->RemoveItem($id_item);
+    //       $h = $this->Cart->RemoveItem($id_item);
 
 
-            echo json_encode(array( 'error'=>0, 'cart'=> $this->Cart->GetCart() ));
-        }
-    }
+    //         echo json_encode(array( 'error'=>0, 'cart'=> $this->Cart->GetCart() ));
+    //     }
+    // }
 
-public function update_item_cart() {
-    if($this->input->post()) {
-      $this->Cart->id = (int)$this->input->post('id_cart');
-      $id_item = (int)$this->input->post('id_item');
-      $id_product = (int)$this->input->post('id_product');
-      $amount = (int)$this->input->post('amount');
+// public function update_item_cart() {
+//     if($this->input->post()) {
+//       $this->Cart->id = (int)$this->input->post('id_cart');
+//       $id_item = (int)$this->input->post('id_item');
+//       $id_product = (int)$this->input->post('id_product');
+//       $amount = (int)$this->input->post('amount');
       
       
-      if( !is_int($id_item) || !is_int($amount) || $amount<=0) return;
+//       if( !is_int($id_item) || !is_int($amount) || $amount<=0) return;
 
-      $h = $this->Cart->UpdateProduct($id_item, $id_product, $amount);
+//       $h = $this->Cart->UpdateProduct($id_item, $id_product, $amount);
 
-      echo json_encode(array( 'error'=>0, 'cart'=> $this->Cart->GetCart() ));
+//       echo json_encode(array( 'error'=>0, 'cart'=> $this->Cart->GetCart() ));
+//     }
+//   }
+
+public function get_coupon($code) {
+
+    $coupon = $this->Cart->GetCoupon($code);
+
+    if ($coupon) {
+    // $discount = $this->Cart->AddDiscount($this->Cart->id, $coupon);
+      echo json_encode(array( 'error'=>0, 'coupon'=> $coupon ));  
     }
+    else
+      echo json_encode(array( 'error'=>1, 'message'=> 'Este cupón no es válido' ));  
+    
   }
 
-public function add_coupon() {
-  if($this->input->post()) {
-      $this->Cart->id = (int)$this->input->post('id_cart');
-      $code = $this->input->post('code');
-      $cart = $this->Cart->GetCart();
-
-      
-      if( !is_int($this->Cart->id) || !$code) return;
-  
-      $coupon = $this->Cart->GetCoupon($code);
-      if ($coupon) {
-      $discount = $this->Cart->AddDiscount($this->Cart->id, $coupon);
-        echo json_encode(array( 'error'=>0, 'cart'=> $this->Cart->GetCart() ));  
-      }
-      else
-        echo json_encode(array( 'error'=>1, 'message'=> 'Este cupón no es válido' ));  
-    }
-  }
-
-
-public function confirm_buy() {
+  public function confirm_buy() {
     if($this->input->post())
     {
       $id_cart = (int)$this->input->post('id_cart');
