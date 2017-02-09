@@ -33,6 +33,16 @@ public function GetSection()
     ";
     return $this->db->query($sql)->result();
 }
+public function GetGim($code,$password)
+{
+ $sql = "select t*
+    from section t
+    where t.active = '1'
+    AND t.code = code
+    AND t.password = password
+    ";
+    return $this->db->query($sql)->row();
+}
 
 public function SelectSize()
 {

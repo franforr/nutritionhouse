@@ -242,7 +242,7 @@ public function search()
 //     }
 //   }
 
-public function get_coupon($code) {
+  public function get_coupon($code) {
 
     $coupon = $this->Cart->GetCoupon($code);
 
@@ -252,6 +252,17 @@ public function get_coupon($code) {
     }
     else
       echo json_encode(array( 'error'=>1, 'message'=> 'Este cupón no es válido' ));  
+    
+  }
+  public function get_gim() {
+
+    $gim = $this->Cart->GetGim($this->input->post('code'), $this->input->post('password'));
+
+    if ($gim) {
+      echo json_encode(array( 'error'=>0, 'coupon'=> $gim ));  
+    }
+    else
+      echo json_encode(array( 'error'=>1, 'message'=> 'Gimnasio o contraseña incorrectas.' ));  
     
   }
 
