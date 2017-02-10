@@ -259,7 +259,7 @@ public function search()
     $gim = $this->Cart->GetGim($this->input->post('code'), $this->input->post('password'));
 
     if ($gim) {
-      echo json_encode(array( 'error'=>0, 'coupon'=> $gim ));  
+      echo json_encode(array( 'error'=>0, 'gim'=> $gim ));  
     }
     else
       echo json_encode(array( 'error'=>1, 'message'=> 'Gimnasio o contraseña incorrectas.' ));  

@@ -207,6 +207,17 @@ public function UpdateTotals() {
     return $this;
   }
 
+  public function GetGim($code,$password)
+  {
+   $sql = "select t.*
+      from gim t
+      where t.active = '1'
+      AND t.code = '$code'
+      AND t.password = '$password'
+      ";
+      return $this->db->query($sql)->row();
+  }
+
    public function SumCost( $symbol = true )
   {
     $total = 0;
