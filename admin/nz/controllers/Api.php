@@ -269,73 +269,53 @@ public function search()
   public function confirm_buy() {
     if($this->input->post())
     {
-      $id_cart = (int)$this->input->post('id_cart');
-      $this->Cart->id = $id_cart;
-      if( !is_int($id_cart) ) return;
+      $data = json_decode($this->input->post('data'));
 
-      $this->load->library('form_validation');
-
-      $this->form_validation->set_rules('name', $this->lang->line('Nombre'), 'trim|required');
-      $this->form_validation->set_rules('lastname', $this->lang->line('Apellido'), 'trim|required');
-      $this->form_validation->set_rules('mail', $this->lang->line('Mail'), 'trim|required|valid_email');
-      $this->form_validation->set_rules('phone', $this->lang->line('Telefono'), 'trim|required');
-      $this->form_validation->set_rules('address', $this->lang->line('Dirección'), 'trim|required');
-      $this->form_validation->set_rules('cp', $this->lang->line('Código postal'), 'trim|required');
-      $this->form_validation->set_rules('city', $this->lang->line('Ciudad'), 'trim|required');
-      $this->form_validation->set_rules('province', $this->lang->line('Provincia'), 'trim|required');
-      // $this->form_validation->set_rules('billing[country]', $this->lang->line('País'), 'trim|required');
-
-      // $this->form_validation->set_rules('billing[address]', $this->lang->line('Dirección'), 'trim|required');
-
-      // $this->form_validation->set_rules('terms', $this->lang->line('Términos y condiciones'), 'trim|required');
-      // $this->form_validation->set_rules('right', $this->lang->line('Derecho de revocación'), 'trim|required');
-      // $this->form_validation->set_rules('id_payment', $this->lang->line('Método de pago'), 'trim|required');
-
-      // if( !$this->input->post('shipping-methods') ) {
-      //   $this->form_validation->set_rules('address[name]', $this->lang->line('Nombre'), 'trim|required');
-      //   $this->form_validation->set_rules('address[lastname]', $this->lang->line('Apellido'), 'trim|required');
-      //   $this->form_validation->set_rules('address[mail]', $this->lang->line('Mail'), 'trim|required|valid_email');
-      //   $this->form_validation->set_rules('address[phone]', $this->lang->line('Telefono'), 'trim|required');
-      //   $this->form_validation->set_rules('address[address]', $this->lang->line('Dirección'), 'trim|required');
-      //   $this->form_validation->set_rules('address[cp]', $this->lang->line('Código postal'), 'trim|required');
-      //   $this->form_validation->set_rules('address[location]', $this->lang->line('Localidad'), 'trim|required');
-      //   $this->form_validation->set_rules('address[province]', $this->lang->line('Provincia'), 'trim|required');
-      //   $this->form_validation->set_rules('address[country]', $this->lang->line('País'), 'trim|required');
-
-      // }
-
-      if ($this->form_validation->run() == FALSE)
-      {
-        $data['error'] = 1;
-        $data['inputErrors'] = json_encode($this->form_validation->error_array());
-        echo json_encode($data);
-
-      } else {
+      // $this->Cart->id = $id_cart;
+      // if( !is_int($id_cart) ) return;
 
 
-        $Cart = $this->Cart->GetCart($id_cart);
+      // $this->form_validation->set_rules('name', $this->lang->line('Nombre'), 'trim|required');
+      // $this->form_validation->set_rules('lastname', $this->lang->line('Apellido'), 'trim|required');
+      // $this->form_validation->set_rules('mail', $this->lang->line('Mail'), 'trim|required|valid_email');
+      // $this->form_validation->set_rules('phone', $this->lang->line('Telefono'), 'trim|required');
+      // $this->form_validation->set_rules('address', $this->lang->line('Dirección'), 'trim|required');
+      // $this->form_validation->set_rules('cp', $this->lang->line('Código postal'), 'trim|required');
+      // $this->form_validation->set_rules('city', $this->lang->line('Ciudad'), 'trim|required');
+      // $this->form_validation->set_rules('province', $this->lang->line('Provincia'), 'trim|required');
+
+      // var_dump($data);die;
+
+      $cart = array(
+        'id_gim'=>$data->gim->id_gim,
+        'id_state'=>2,
+        'id_shipping'=>$data->user->id_shipping,
+        'id_coupon'=>$data->coupon->id_coupon,
+        // 'code'=>$data->,
+        'name'=>$data->user->name,
+        'lastname'=>$data->user->lastname,
+        'address'=>$data->user->address,
+        'postal_code'=>$data->user->postal_code,
+        'province'=>$data->user->province,
+        'city'=>$data->user->city,
+        'phone'=>$data->user->phone,
+        'mail'=>$data->user->mail,
+        'coupon_1'=>$data->coupon->value,
+        // 'subtotal'=>,
+        // 'total'=>,
+        'created'=>date('Y-m-d H:i:s'),
+      );
+
+
+      // $insert_user = $this->db->insert('user',$user);
+
+      var_dump($cart);die;
+
         
-
-        switch ($this->input->post('shipping-methods')) {
-          case 'billing':
-
-            # enviar a mi dir de facutracion
-            $shipping_data = $this->input->post('billing');
-            $id_shipping = 2;
-            // $id_address_country = $this->input->post('billing')['country'];
-            break;
-          
-          default:
-            # retira en tienda
-            $shipping_data = null;
-            $id_shipping = 1;
-            // $id_address_country = $this->input->post('billing')['country'];
-            break;
-        }
 
         $data_update = array(
           // 'ip_user'=>$this->input->ip_address(),
-          'id_state'=>2, /*ANALIZAR*/
+          'id_state'=>2,
           'modified'=>date('Y-m-d H:i:s'),
           // 'id_payment'=>$this->input->post('id_payment'),
           'name'=>$this->input->post('name'),
@@ -361,7 +341,6 @@ public function search()
 
         echo json_encode(array( 'error'=>0, 'callback'=> 'success-confirm-buy' ));
 
-      } 
 
     }
   }
