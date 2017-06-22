@@ -259,6 +259,7 @@ public function search()
     $gim = $this->Cart->GetGim($this->input->post('code'), $this->input->post('password'));
 
     if ($gim) {
+      $gim->file = $gim->file ? thumb($gim->file,200,150) : false;;
       echo json_encode(array( 'error'=>0, 'gim'=> $gim ));  
     }
     else

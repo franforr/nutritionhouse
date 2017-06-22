@@ -35,7 +35,9 @@ public function GetSection()
 }
 public function GetGim($code,$password)
 {
- $sql = "select t*
+ $sql = "select t*, f.file as file
+     left join nz_file f on f.id_file = t.id_file
+
     from section t
     where t.active = '1'
     AND t.code = code
@@ -87,7 +89,7 @@ public function GetCatTitle($id_category = 0)
 
   public function GetProducts( $filters = array(), $order = array(), $limit = 0, $start = 0)
   {
-    $sql = "select p.id_product as id, p.id_category as id_category, pc.category as category, p.title as title, p.text as text, p.cost as price, f.file
+    $sql = "select p.id_product as id, p.id_category as id_category, pc.category as category, p.title as title, p.text as text, p.cost as price, f.file, p.id_state as state
     from product p
     left join nz_file f on f.id_file = p.id_file
     left join product_size ps on ps.id_size = p.id_size

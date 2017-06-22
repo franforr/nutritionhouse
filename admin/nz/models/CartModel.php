@@ -207,10 +207,13 @@ public function UpdateTotals() {
     return $this;
   }
 
+
+
   public function GetGim($code,$password)
   {
-   $sql = "select t.*
+   $sql = "select t.id_gim as id_gim, t.name as name, t.code as code, t.active as active, f.file as file
       from gim t
+      left join nz_file f on f.id_file = t.id_file
       where t.active = '1'
       AND t.code = '$code'
       AND t.password = '$password'
