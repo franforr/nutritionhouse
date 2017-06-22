@@ -36,9 +36,8 @@ public function GetSection()
 public function GetGim($code,$password)
 {
  $sql = "select t*, f.file as file
-     left join nz_file f on f.id_file = t.id_file
-
     from section t
+    left join nz_file f on f.id_file = t.id_file
     where t.active = '1'
     AND t.code = code
     AND t.password = password
@@ -78,7 +77,7 @@ public function GetCatTitle($id_category = 0)
 
   public function GetProduct($id_product = 0)
   {
-    $sql = "select f.file, p.id_gallery, p.id_product as id, pc.category as category, p.title as title, p.cost as price, p.text as text, p.id_state as state, p.related as related 
+    $sql = "select f.file, p.id_gallery, p.id_product as id, pc.category as category, p.title as title, p.cost as price, p.text as text, p.id_state as state, p.related as related, p.id_size as id_size 
     from product p
     left join nz_file f on f.id_file = p.id_file
     left join product_category pc on pc.id_category = p.id_category
@@ -97,13 +96,17 @@ public function GetCatTitle($id_category = 0)
     where p.active = '1'";
 
     if(count($filters)) {
-      if( $filters['id_category'] )
-        $sql .= " AND p.id_category = '{$filters['id_category']}'"; 
-      if( $filters['keyword'] )
+      if( isset($filters['id_category']) && $filters['id_category'] ) {
+        if( $filters['id_category'] == 'sales' )
+            $sql .= " AND p.promotion = 1"; 
+        else
+            $sql .= " AND (p.id_category = '{$filters['id_category']}' 
+                            OR p.more_categories LIKE '%{$filters['id_category']}%')"; 
+      } if( isset($filters['keyword']) && $filters['keyword'] )
         $sql .= " AND p.title LIKE '%{$filters['keyword']}%' OR p.text LIKE '%{$filters['keyword']}%'";
-      if( $filters['size'] )
+      if( isset($filters['size']) && $filters['size'] )
         $sql .= " AND p.id_size = '{$filters['size']}'";
-      if( $filters['price'] ) {
+      if( isset($filters['price']) && $filters['price'] ) {
         $explode = explode(',', $filters['price']);
         $min = $explode[0];
         $max = $explode[1];

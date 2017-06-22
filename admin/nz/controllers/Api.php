@@ -4,6 +4,7 @@ class Api extends CI_Controller {
 
   public function __construct()
   {
+    $this->safeFunctionsU = array('start');
     header('Access-Control-Allow-Origin: *');
     header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
@@ -18,7 +19,7 @@ class Api extends CI_Controller {
     $this->load->library('Encryption');
     $this->load->model('AppMainModel', 'MApp');  
     $this->load->model('ApiModel', 'Api');
-    $this->load->model('CartModel', 'Cart');
+    // $this->load->model('CartModel', 'Cart');
   }
 
 
@@ -43,7 +44,7 @@ class Api extends CI_Controller {
       $sliderhome[$key]->subtitle = substr($value->subtitle, 0, 76);
     }
     
-		foreach ($sections as $key => $value) {
+    foreach ($sections as $key => $value) {
       $sections[$key]->accordion = false;
       if($value->id == 10) {
         $sections[$key]->accordion = $faq;
@@ -115,6 +116,7 @@ class Api extends CI_Controller {
     $gallery = $this->Api->gallery($product->id_gallery);
     $product->gallery = count($gallery) ? $gallery : false;
     $product->price = round($product->price);
+    $product->text = nl2br($product->text);
 
     if ($product->gallery) {
       foreach ($product->gallery as $key => $value) {
@@ -128,13 +130,28 @@ class Api extends CI_Controller {
     $data['product'] = $product;
     $data['related'] = array();
 
-    foreach ($related as $r) {
-      $product = $this->Api->GetProduct($r);
-      $product->file = $product->file ? thumb($product->file,500,500) : 'img/default.svg';
-      $product->price = round($product->price);;
-      if($product)
-      {
-        $data['related'][] = $product;
+
+    if( count($related) ) {
+      if( $limit = 5 - count($related) ) {
+        $filters = array(
+          'size' => $product->id_size,
+        );
+
+        $extra_related = $this->Api->GetProducts($filters, false, $limit);
+      }
+      foreach ($related as $r) {
+        $product = $this->Api->GetProduct($r);
+        $product->file = $product->file ? thumb($product->file,500,500) : 'img/default.svg';
+        $product->price = round($product->price);
+        if($product)
+        {
+          $data['related'][] = $product;
+        }
+      }
+      if(isset($extra_related) && isset($extra_related)) {
+        foreach ($extra_related['result'] as $key => $value) {
+          $data['related'][] = $value;
+        }
       }
     }
     
@@ -244,6 +261,7 @@ public function search()
 
   public function get_coupon($code) {
 
+    $this->load->model('CartModel', 'Cart');
     $coupon = $this->Cart->GetCoupon($code);
 
     if ($coupon) {
@@ -256,10 +274,11 @@ public function search()
   }
   public function get_gim() {
 
+    $this->load->model('CartModel', 'Cart');
     $gim = $this->Cart->GetGim($this->input->post('code'), $this->input->post('password'));
 
     if ($gim) {
-      $gim->file = $gim->file ? thumb($gim->file,200,150) : false;;
+      $gim->file = $gim->file ? thumb($gim->file,200,150) : false;
       echo json_encode(array( 'error'=>0, 'gim'=> $gim ));  
     }
     else
@@ -270,79 +289,48 @@ public function search()
   public function confirm_buy() {
     if($this->input->post())
     {
+      $this->load->model('CartModel', 'Cart');
       $data = json_decode($this->input->post('data'));
 
-      // $this->Cart->id = $id_cart;
-      // if( !is_int($id_cart) ) return;
+      $this->Cart->Start();
 
+      foreach ($data->items as $k => $item) {
+        $this->Cart->AddProduct($item->id_product,$item->quantity);
+      }
 
-      // $this->form_validation->set_rules('name', $this->lang->line('Nombre'), 'trim|required');
-      // $this->form_validation->set_rules('lastname', $this->lang->line('Apellido'), 'trim|required');
-      // $this->form_validation->set_rules('mail', $this->lang->line('Mail'), 'trim|required|valid_email');
-      // $this->form_validation->set_rules('phone', $this->lang->line('Telefono'), 'trim|required');
-      // $this->form_validation->set_rules('address', $this->lang->line('Dirección'), 'trim|required');
-      // $this->form_validation->set_rules('cp', $this->lang->line('Código postal'), 'trim|required');
-      // $this->form_validation->set_rules('city', $this->lang->line('Ciudad'), 'trim|required');
-      // $this->form_validation->set_rules('province', $this->lang->line('Provincia'), 'trim|required');
+      if(isset($data->coupon) && isset($data->coupon->code)) {
+        $coupon = $this->Cart->GetCoupon($data->coupon->code);
+        $this->Cart->AddDiscount($this->Cart->id,$coupon);
+      }
 
-      // var_dump($data);die;
+      // $this->Cart->UpdateTotals();
+      $this->Cart->GetCart();
 
-      $cart = array(
-        'id_gim'=>$data->gim->id_gim,
+      $data_update = array(
+        'id_gim'=>(isset($data->gim)) ? $data->gim->id_gim : false,
         'id_state'=>2,
-        'id_shipping'=>$data->user->id_shipping,
-        'id_coupon'=>$data->coupon->id_coupon,
-        // 'code'=>$data->,
-        'name'=>$data->user->name,
-        'lastname'=>$data->user->lastname,
-        'address'=>$data->user->address,
-        'postal_code'=>$data->user->postal_code,
-        'province'=>$data->user->province,
-        'city'=>$data->user->city,
-        'phone'=>$data->user->phone,
-        'mail'=>$data->user->mail,
-        'coupon_1'=>$data->coupon->value,
-        // 'subtotal'=>,
-        // 'total'=>,
+        'id_shipping'=>(isset($data->user)) ? $data->user->id_shipping : false,
+        'id_coupon'=>(isset($data->coupon) && isset($data->coupon->code)) ? $data->coupon->id_coupon : false,
+        'name'=>(isset($data->user)) ? $data->user->name : false,
+        'lastname'=>(isset($data->user)) ? $data->user->lastname : false,
+        'address'=>(isset($data->user)) ? $data->user->address : false,
+        'postal_code'=>(isset($data->user)) ? $data->user->postal_code : false,
+        'province'=>(isset($data->user)) ? $data->user->province : false,
+        'city'=>(isset($data->user)) ? $data->user->city : false,
+        'phone'=>(isset($data->user)) ? $data->user->phone : false,
+        'mail'=>(isset($data->user)) ? $data->user->mail : false,
+        'subtotal'=> $this->Cart->subtotal,
+        'total'=> $this->Cart->total,
         'created'=>date('Y-m-d H:i:s'),
       );
 
+      $this->db->where("t.id_cart = '{$this->Cart->id}'");
+      $update = $this->db->update('cart as t',$data_update);
 
-      // $insert_user = $this->db->insert('user',$user);
-
-      var_dump($cart);die;
-
-        
-
-        $data_update = array(
-          // 'ip_user'=>$this->input->ip_address(),
-          'id_state'=>2,
-          'modified'=>date('Y-m-d H:i:s'),
-          // 'id_payment'=>$this->input->post('id_payment'),
-          'name'=>$this->input->post('name'),
-          'lastname'=>$this->input->post('lastname'),
-          'mail'=>$this->input->post('mail'),
-          'address'=>$this->input->post('address'),
-          'postal_code'=>$this->input->post('postal_code'),
-          'province'=>$this->input->post('province'),
-          'city'=>$this->input->post('city'),
-          'phone'=>$this->input->post('phone'),
-          'id_shipping'=>$id_shipping,
-          'subtotal'=>$Cart->subtotal,
-          // 'tax'=>$Cart->tax,
-          'total'=>$Cart->total,
-          // 'shipping'=>$this->Cart->ConutryShippingCost($id_address_country),
-          // 'data'=>$data->data ? json_encode($data->data) : false,
-          // 'payment_data'=> $this->input->post('billing') ? json_encode( $this->input->post('billing') )  : false,
-          // 'shipping_data'=> json_encode($shipping_data),
-        );
-
-        $this->db->where("t.id_cart = '{$Cart->id}'");
-        $update = $this->db->update('cart as t',$data_update);
-
-        echo json_encode(array( 'error'=>0, 'callback'=> 'success-confirm-buy' ));
+      echo json_encode(array( 'error'=>0 ));
 
 
     }
   }
 }
+

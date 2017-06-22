@@ -61,7 +61,7 @@
     'class' => $this->validation->error_class($field),
     'checked' => ($dataItem[$field] > 0)
   ))) ?>  
-  <? $field = 'highlight'; $this->load->view('app/form', array('item' => array(
+  <?/* $field = 'highlight'; $this->load->view('app/form', array('item' => array(
     'columns' => 2,
     'type' => 'checkbox',
     'form' => $wgetId,
@@ -71,19 +71,7 @@
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),
     'checked' => ($dataItem[$field] > 0)
-  ))) ?>  
-<? $field = 'id_category'; $this->load->view('app/form', array('item' => array(
-    'type' => 'select',
-    'columns' => 5,
-    'form' => $wgetId,
-    'name' => $field,
-    'data' => $select['SelectProductCategory'],
-    'label' => $this->lang->line('Categoría'),
-    'error' => $this->validation->error($field),
-    'class' => $this->validation->error_class($field),
-    'value' => $dataItem[$field],
-    'placeholder' => ''
-  ))) ?>
+  )))*/ ?>  
 
 <? $field = 'id_size'; $this->load->view('app/form', array('item' => array(
     'type' => 'select',
@@ -109,21 +97,44 @@
     'value' => $dataItem[$field],
     'placeholder' => ''
   ))) ?>
-<? $field = 'text'; $this->load->view('app/form', array('item' => array(
-    'type' => 'textarea',
-    'height' => 160,
-    'columns' => 10,
+
+
+<div class="col-md-6">
+
+<? $field = 'id_category'; $this->load->view('app/form', array('item' => array(
+    'type' => 'select',
+    'columns' => 5,
     'form' => $wgetId,
     'name' => $field,
-    'label' => $this->lang->line('Descripción'),
-    'value' => $dataItem[$field],
+    'data' => $select['SelectProductCategory'],
+    'label' => $this->lang->line('Categoría Principal'),
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),
+    'value' => $dataItem[$field],
     'placeholder' => ''
   ))) ?>
+  <? $field = 'more_categories'; $this->load->view('app/form', array('item' => array(
+      'type' => 'select',
+      'columns' => 9,
+      'form' => $wgetId,
+      'name' => $field,
+      'data' => $select['SelectProductCategory'],
+      'label' => $this->lang->line('Categorías complementarias'),
+      'placeholder' => ''
+    ))) ?> 
+    <div class="col col-inset col-3">
+         <span style="margin-top:20px" class="btn btn-primary add-product2"><i class="glyphicon glyphicon-plus"></i> Agregar</span>
+      </div>
+      <div style="clear:both"></div>
+        <ul class="products-list2">
+        </ul>
+</div>
+
+
+  <div class="col-md-6">
 <? $field = 'id_file'; $this->load->view('app/form', array('item' => array(
     'type' => 'filemanager',
-    'columns' => 4,
+    'columns' => 12,
     'form' => $wgetId,
     'name' => $field,
     'error' => $this->validation->error($field),
@@ -151,9 +162,23 @@
     'value' => $dataItem[$field],
     'placeholder' => ''
   ))) ?>
-
-
 </div>
+
+
+<? $field = 'text'; $this->load->view('app/form', array('item' => array(
+    'type' => 'textarea',
+    'height' => 160,
+    'columns' => 12,
+    'form' => $wgetId,
+    'name' => $field,
+    'label' => $this->lang->line('Descripción'),
+    'value' => $dataItem[$field],
+    'error' => $this->validation->error($field),
+    'class' => $this->validation->error_class($field),
+    'placeholder' => ''
+  ))) ?>
+
+
 <div style="margin-top: 15px">
   <? $field = 'id_product_related'; $this->load->view('app/form', array('item' => array(
       'type' => 'select',
@@ -168,8 +193,12 @@
          <span style="margin-top:20px" class="btn btn-primary add-product"><i class="glyphicon glyphicon-plus"></i> Agregar</span>
       </div>
       <div style="clear:both"></div>
-        <ul class="products-list">
-        </ul>
+      <ul class="products-list">
+      </ul>
+</div>
+
+
+
 </div>
 
       </fieldset>
@@ -200,13 +229,37 @@ $('.form-post-id_product_related', formGlobal).attr('name', '');
     createProductRelated($('.form-post-id_product_related', formGlobal).val(), $('.form-post-id_product_related option:selected').text());
   });
    <? if($idItem):
-   $products = json_decode($dataItem['related']);
-   if($products && count($products)):
-    foreach($products as $tid): $t = $this->model->DataElement($tid); ?>
-    createProductRelated('<?= $t['id_product'] ?>','<?= addslashes($t['title']) ?>');
+   $item = json_decode($dataItem['related']);
+   if($item && count($item)):
+    foreach($item as $tid): $t = $this->model->DataElement($tid); ?>
+    createProductRelated('<?= $tid ?>','<?= addslashes($t['title']) ?>');
   <? endforeach  ?>
   <? endif  ?>
   <? endif  ?>
+
+$('.form-post-more_categories', formGlobal).attr('name', '');
+  var createProductRelated2 = function(id, text){
+    var li = $('<li/>');
+    li.html(text + '<span class="delete-item" style="cursor:pointer;margin-left:20px"><i class="glyphicon glyphicon-trash"></i></span><input type="hidden" value="' + id + '" name="more_categories[]">')
+    li.css('margin-bottom', '5px');
+    $('.delete-item', li).click(function(){
+      li.remove();
+    })
+    $('.products-list2').append(li);
+  };
+  $('.add-product2', formGlobal).click(function(){
+    if(!$('.form-post-more_categories', formGlobal).val())
+      return;
+    createProductRelated2($('.form-post-more_categories', formGlobal).val(), $('.form-post-more_categories option:selected').text());
+  });
+   <? if($idItem):
+   $items = json_decode($dataItem['more_categories']);
+   if($items && count($items)):
+    foreach($items as $tid): $t = $this->model->DataCategory($tid); ?>
+    createProductRelated2('<?= $tid ?>','<?= addslashes($t['category']) ?>');
+  <? endforeach  ?>
+  <? endif ?>
+  <? endif ?>
 
 <? if(!$this->MApp->secure->edit):?>
   formGlobal.addClass('form-disabled');
@@ -226,7 +279,7 @@ $('.form-post-id_product_related', formGlobal).attr('name', '');
       'id_size': 'required',
       'title': 'required',
       'cost': 'required',
-      'id_gallery': 'required' */     
+      'id_gallery': 'required' */
     },
     messages : {
     }

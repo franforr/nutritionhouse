@@ -203,6 +203,7 @@ class ProductModel extends AppModel {
       'promotion' => $this->input->post('promotion') ? 1 : 0,
       'highlight' => $this->input->post('highlight') ? 1 : 0,
       'related' => json_encode($this->input->post('related')),
+      'more_categories' => json_encode($this->input->post('more_categories')),
       'active' => $this->input->post('active') ? 1 : 0,
     );
     $gitems = explode(',', $this->input->post('id_gallery-items'));
@@ -263,9 +264,34 @@ class ProductModel extends AppModel {
     $ret['id_gallery'] = $this->input->post() ? $this->input->post('id_gallery') : '';
     $ret['promotion'] = $this->input->post('promotion') ? 1 : 0;
     $ret['highlight'] = $this->input->post('highlight') ? 1 : 0;
-    $ret['related'] = $this->input->post() ? $this->input->post('related') : '';
+    $ret['related'] = $this->input->post() ? $this->input->post('related') : false;
+    $ret['more_categories'] = $this->input->post() ? $this->input->post('more_categories') : false;
     $ret['active'] = $this->input->post('active') ? 1 : 0;
     return $ret;
   }
+  
+  public function DataCategory( $id = 0, $null = false)
+  {
+    $ret = array();
+    if($id)
+    {
+      $sql = "SELECT t.id_category as id, t.*,
+      lj0.file as fm1file, lj0.id_type as fm1type, lj0.name as fm1name      
+      FROM {$this->table}_category as t      
+      LEFT JOIN nz_file lj0 on t.id_file = lj0.id_file      
+      WHERE t.id_category = '{$id}' 
+      LIMIT 0, 1";
+      $ret = $this->db->query($sql)->row_array();
+      if($ret) return $ret;
+      if($null) return false;
+    }    
+    $ret['category'] = $this->input->post() ? $this->input->post('category') : '';
+    $ret['id_file'] = $this->input->post() ? $this->input->post('id_file') : '';
+    $ret['highlight'] = $this->input->post('highlight') ? 1 : 0;
+    $ret['num'] = $this->input->post() ? $this->input->post('num') : '';
+    $ret['active'] = $this->input->post('active') ? 1 : 0;
+    return $ret;
+  }
+
 
 }
