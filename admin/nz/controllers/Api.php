@@ -139,17 +139,23 @@ class Api extends CI_Controller {
 
         $extra_related = $this->Api->GetProducts($filters, false, $limit);
       }
-      foreach ($related as $r) {
-        $product = $this->Api->GetProduct($r);
-        $product->file = $product->file ? thumb($product->file,500,500) : 'img/default.svg';
-        $product->price = round($product->price);
-        if($product)
-        {
-          $data['related'][] = $product;
+      if( $related ) {
+
+        foreach ($related as $r) {
+          $product = $this->Api->GetProduct($r);
+          $product->file = $product->file ? thumb($product->file,500,500) : 'img/default.svg';
+          $product->price = round($product->price);
+          if($product)
+          {
+            $data['related'][] = $product;
+          }
         }
       }
       if(isset($extra_related) && isset($extra_related)) {
         foreach ($extra_related['result'] as $key => $value) {
+          
+          $value->file = $value->file ? thumb($value->file,500,500) : 'img/default.svg';
+          $value->price = round($value->price);
           $data['related'][] = $value;
         }
       }
