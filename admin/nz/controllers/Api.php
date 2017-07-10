@@ -293,30 +293,44 @@ public function search()
   }
 
   public function confirm_buy() {
+
     if($this->input->post())
     {
       $this->load->model('CartModel', 'Cart');
       $data = json_decode($this->input->post('data'));
 
+
       $this->Cart->Start();
+
+      if(isset($data->gim)) {
+        $this->Cart->gim = $data->gim;
+      }
 
       foreach ($data->items as $k => $item) {
         $this->Cart->AddProduct($item->id_product,$item->quantity);
       }
-
       if(isset($data->coupon) && isset($data->coupon->code)) {
-        $coupon = $this->Cart->GetCoupon($data->coupon->code);
-        $this->Cart->AddDiscount($this->Cart->id,$coupon);
-      }
+        $coupon = $this->Cart->GetCoupon($data->coupon->code, 1);
 
-      // $this->Cart->UpdateTotals();
+        if($coupon)
+          $this->Cart->AddDiscount($this->Cart->id,$coupon);
+
+      }
+      // cart.subtotal = count_cost;
+      // cart.total = count_cost - cart.discount;
+      // cart.gim_discount = (cart.gim.active) ? Math.round(cart.total * 5 / 100, 2) : 0;
+      // cart.total = cart.total - cart.gim_discount;
+      // cart.iva = Math.round(cart.total * 21 / 100, 2);
+      // cart.total = cart.total + cart.iva;
+
+
       $this->Cart->GetCart();
 
       $data_update = array(
         'id_gim'=>(isset($data->gim)) ? $data->gim->id_gim : false,
         'id_state'=>2,
         'id_shipping'=>(isset($data->user)) ? $data->user->id_shipping : false,
-        'id_coupon'=>(isset($data->coupon) && isset($data->coupon->code)) ? $data->coupon->id_coupon : false,
+        'id_coupon'=>(isset($coupon)) ? $coupon->id_coupon : false,
         'name'=>(isset($data->user)) ? $data->user->name : false,
         'lastname'=>(isset($data->user)) ? $data->user->lastname : false,
         'address'=>(isset($data->user)) ? $data->user->address : false,
@@ -325,10 +339,14 @@ public function search()
         'city'=>(isset($data->user)) ? $data->user->city : false,
         'phone'=>(isset($data->user)) ? $data->user->phone : false,
         'mail'=>(isset($data->user)) ? $data->user->mail : false,
+        'desc1'=>(isset($this->Cart->discount)) ? $this->Cart->discount : false,
         'subtotal'=> $this->Cart->subtotal,
         'total'=> $this->Cart->total,
+        'iva'=> $this->Cart->iva,
+        'gim_discount'=> $this->Cart->gim_discount,
         'created'=>date('Y-m-d H:i:s'),
       );
+
 
       $this->db->where("t.id_cart = '{$this->Cart->id}'");
       $update = $this->db->update('cart as t',$data_update);

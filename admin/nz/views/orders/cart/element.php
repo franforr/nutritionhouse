@@ -166,10 +166,90 @@
     'class' => $this->validation->error_class($field),
     'placeholder' => ''
   ))) ?>
+
+  <?php $items = $dataItem['items']; ?>
+  <div class="clearfix"></div>
+  <div class="col col-md-12">
+  <h1>Pedido: </h1>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th></th>
+          <th>Categoría</th>
+          <th>Tamaño</th>
+          <th>Cantidad</th>
+          <th>Costo individual</th>
+          <th>Costo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $count_items = 0;
+         foreach ($items as $key => $item):
+        $count_items = $count_items + $item->items ?>
+        <tr>
+          <th><img src="<?= thumb($item->file,100,100) ?>" style="background:gray;with:100px;height:100px;"></th>
+          <th style=" vertical-align: middle; "><strong><?= $item->title ?></strong></th>          
+          <th style=" vertical-align: middle; "><small><?= $item->category ?></small></th>          
+          <th style=" vertical-align: middle; "><small><?= $item->size ?></small></th>          
+          <th style=" vertical-align: middle; "><small><?= $item->items ?></small></th>          
+          <th style=" vertical-align: middle; "><small><?= round($item->cost,2) ?></small></th>          
+          <th style=" vertical-align: middle; "><small><?= round($item->cost * $item->items,2) ?></small></th>          
+        </tr>
+        <?php endforeach ?>
+      </tbody>
+      <thead>
+        <tr>
+          <th colspan="5">Subtotal</th>
+          <th colspan="1"><?= $count_items ?></th>
+          <th colspan="2"><?= $dataItem['subtotal'] ?></th>
+        </tr>
+        <?php if ($dataItem['coupon_type'] == 1): ?>
+        <tr>
+          <th colspan="5">Cupón de descuento</th>
+          <th colspan="1"><?= $dataItem['coupon_value'] ?>%</th>
+          <th colspan="2">-<?= $dataItem['desc1'] ?></th>
+        </tr>
+        <?php elseif ($dataItem['coupon_type'] == 2): ?>
+        <tr>
+          <th colspan="5">Vale de descuento</th>
+          <th colspan="1"></th>
+          <th colspan="2">-<?= $dataItem['desc1'] ?></th>
+        </tr>
+        <?php endif ?>
+        <?php if ($dataItem['id_gim']): ?>
+        <tr>
+          <th colspan="5">Descuento por gimnasio</th>
+          <th colspan="1"></th>
+          <th colspan="2">-<?= $dataItem['gim_discount'] ?></th>
+        </tr>
+        <?php endif ?>
+        <tr>
+          <th colspan="5">IVA</th>
+          <th colspan="1"></th>
+          <th colspan="2"><?= $dataItem['iva'] ?></th>
+        </tr>
+        <tr>
+          <th colspan="5">Total</th>
+          <th colspan="1"></th>
+          <th colspan="2" style="color:green">$ <?= $dataItem['total'] ?></th>
+        </tr>
+        <tr>
+          <th colspan="1">Comisión gimasio</th>
+          <th colspan="5" style="color:grey"><?= $dataItem['gim'] ?></th>
+          <th colspan="2" style="color:red">$ <?= $dataItem['total'] * 0.05 ?></th>
+        </tr>
+      </thead>
+    </table>
+
+  </div>
+<div class="clearfix"></div>
 <? $field = 'comments'; $this->load->view('app/form', array('item' => array(
     'type' => 'textarea',
-    'height' => 160,
-    'columns' => 6,
+    'height' => 100,
+    'columns' => 12,
     'form' => $wgetId,
     'name' => $field,
     'label' => $this->lang->line('Comentarios'),
@@ -178,6 +258,7 @@
     'class' => $this->validation->error_class($field),
     'placeholder' => ''
   ))) ?>
+
 
       </div>
       </fieldset>

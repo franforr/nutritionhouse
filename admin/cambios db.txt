@@ -1,3 +1,0 @@
-ALTER TABLE `user` ADD `active` TINYINT(1) UNSIGNED NOT NULL COMMENT 'Activo' AFTER `modified`;
-ALTER TABLE `cart` ADD `id_user` SMALLINT(5) UNSIGNED NOT NULL COMMENT 'Usuario' AFTER `id_cart`;
-ALTER TABLE `cart_item` DROP `size`;

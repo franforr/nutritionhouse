@@ -5,9 +5,11 @@ class CartModel extends CI_Model
   public
     $id = 0,
     $items = array(),
+    $gim = array(),
+    $coupon = array(),
     $subtotal = 0,
+    $gim_discount = 0,
     $discount = 0,
-    $tax = 0,
     $total = 0;
 
 
@@ -187,23 +189,30 @@ public function ItemExistsId( $product = 0 )
 
 public function UpdateTotals() {
     $SumCost = $this->SumCost();
-    
-
-    // $SumCost = $SumCost +  $this->shipping_cost;
+  
     $this->subtotal = $SumCost;
-    if($this->discount_percent) {
-      $this->discount = round($SumCost * $this->discount_percent / 100, 2);
-      $this->total = $this->subtotal - $this->discount;
-    }
-    if($this->discount_money) {
-      $this->total = $SumCost - $this->discount_money;
-      $this->discount = $this->discount_money;
-    }
-    // $this->discount = $discount;
+    $this->total = $this->subtotal;
 
+
+    if($this->coupon) {
+
+      if($this->coupon->id_type == 1) {
+        $this->discount = $this->total*$this->discount_percent/100;
+      } else {
+        $this->discount = $this->discount_money;
+      }
+      
+      $this->total = $this->total - $this->discount;
+    }
     
-   // $this->subtotal = round( 100 * $SumCost / (100+$this->iva), 2 );
-  //  $this->tax = $this->total - $this->subtotal;
+    if($this->gim) {
+      $this->gim_discount =  $this->total*0.05;
+      $this->total = $this->total - $this->gim_discount;
+    }
+
+    $this->iva = $this->total*0.21;
+    $this->total = $this->total + $this->iva;
+
     return $this;
   }
 
@@ -260,7 +269,7 @@ public function UpdateTotals() {
 
   }
 
-  public function GetCoupon( $code = 0 )
+  public function GetCoupon( $code = 0, $force = 0 )
   {
     
     $date = date("Y-m-d");
@@ -268,16 +277,14 @@ public function UpdateTotals() {
      select co.id_coupon, co.id_type, co.name, co.code, co.value
      from coupon co
      left join coupon_type t on t.id_type = co.id_type
-     where co.code = '{$code}' and total >= used and expire >= '{$date}'  
-     ";
+     where co.code = '{$code}'";
+    if(!$force) $sql .= "and total >= used and expire >= '{$date}'";
     return $this->db->query($sql)->row();
     
   }
 
   public function AddDiscount( $id_cart = 0, $coupon = false )
   {
-    if ($this->id_coupon == $coupon->id_coupon) return;
-
     if ($coupon->id_type == 1) {
       $sql = "update cart c 
       set c.id_coupon = '{$coupon->id_coupon}', c.desc1 = '{$coupon->value}', c.coupon_1 = 0
@@ -297,7 +304,9 @@ public function UpdateTotals() {
       where c.id_coupon = '{$coupon->id_coupon}'
       "; 
        $this->db->query($sql);
-     }
+    }
+    $this->coupon = $coupon;
+    return $this;
   }
 
 }
