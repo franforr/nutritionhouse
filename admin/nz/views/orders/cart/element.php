@@ -239,7 +239,7 @@
         <tr>
           <th colspan="1">Comisión gimasio</th>
           <th colspan="5" style="color:grey"><?= $dataItem['gim'] ?></th>
-          <th colspan="2" style="color:red">$ <?= $dataItem['total'] * 0.05 ?></th>
+          <th colspan="2" style="color:red">$ <?= $dataItem['total'] ?></th>
         </tr>
       </thead>
     </table>

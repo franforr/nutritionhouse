@@ -206,7 +206,10 @@ public function UpdateTotals() {
     }
     
     if($this->gim) {
-      $this->gim_discount =  $this->total*0.05;
+      $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = 'gim_discount'")->row();
+      $gim_discount_porcent = $sql->r;
+
+      $this->gim_discount = $this->total * (int)$gim_discount_porcent / 100;
       $this->total = $this->total - $this->gim_discount;
     }
 

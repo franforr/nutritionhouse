@@ -41,4 +41,11 @@ class nhapp extends AppController {
     $this->load->library("abm", $this->cfg);
   }
 
+  public function config()
+  {
+    $this->cfg['subtitle'] = $this->lang->line('Configuración');
+    $this->cfg['folder'] = 12;
+    $this->load->library("abm", $this->cfg);
+  }
+
 }

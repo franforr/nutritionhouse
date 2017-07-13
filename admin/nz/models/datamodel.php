@@ -256,5 +256,10 @@ class DataModel extends CI_Model
       $where = 'where '. $where;
     return create_select_options($this->db->query("SELECT id_gim as id, name as el FROM gim $where order by el"), $all);
   }
+  public function GetConfig( $var = '' )
+  {
+    $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = '$var'")->row();
+    return $sql->r;
+  }
 
 }

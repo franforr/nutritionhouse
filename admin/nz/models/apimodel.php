@@ -148,5 +148,14 @@ public function GetCatTitle($id_category = 0)
     return $r;
   }  
 
+  public function GetConfig()
+  {
+    $sql = "select t.*
+    from config t";
+
+    $r = $this->db->query($sql)->result();
+    return $r;
+  }  
+
 
 }

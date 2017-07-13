@@ -31,6 +31,7 @@ class Api extends CI_Controller {
     $sections = $this->Api->GetSection();
     $faq = $this->Api->GetFaq();
     $sizes = $this->Api->SelectSize();
+    $config = $this->Api->GetConfig();
     // $cart = $this->Cart->Start(7);
     
     // sistema de cache via json como en infonews
@@ -56,15 +57,15 @@ class Api extends CI_Controller {
     $data['sliderhome'] = $sliderhome;
     $data['sections'] = $sections;
     $data['sizes'] = $sizes;
+    $data['config'] = array();
 
-    // echo '<pre>';
-    // print_r($data);
-    // echo '</pre>';
+    foreach ($config as $key => $value) {
+      $data['config'][$value->var] = $value->value;
+    }
 
     echo json_encode($data);
     
     return;
-
   }
 
 
