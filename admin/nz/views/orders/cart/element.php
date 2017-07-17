@@ -227,6 +227,11 @@
         </tr>
         <?php endif ?>
         <tr>
+          <th colspan="1">Envio</th>
+          <th colspan="5" style="color:grey"><?= $dataItem['province'] ?></th>
+          <th colspan="2"><?= $dataItem['shipping_cost'] ?></th>
+        </tr>
+        <tr>
           <th colspan="5">IVA</th>
           <th colspan="1"></th>
           <th colspan="2"><?= $dataItem['iva'] ?></th>

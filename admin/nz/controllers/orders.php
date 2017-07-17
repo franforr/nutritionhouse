@@ -25,4 +25,11 @@ class orders extends AppController {
     $this->load->library("abm", $this->cfg);
   }
 
+  public function provinces()
+  {
+    $this->cfg['subtitle'] = $this->lang->line('Provincias');
+    $this->cfg['folder'] = 13;
+    $this->load->library("abm", $this->cfg);
+  }
+
 }

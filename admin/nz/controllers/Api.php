@@ -32,6 +32,7 @@ class Api extends CI_Controller {
     $faq = $this->Api->GetFaq();
     $sizes = $this->Api->SelectSize();
     $config = $this->Api->GetConfig();
+    $provinces = $this->Api->GetProvinces();
     // $cart = $this->Cart->Start(7);
     
     // sistema de cache via json como en infonews
@@ -57,6 +58,7 @@ class Api extends CI_Controller {
     $data['sliderhome'] = $sliderhome;
     $data['sections'] = $sections;
     $data['sizes'] = $sizes;
+    $data['provinces'] = $provinces;
     $data['config'] = array();
 
     foreach ($config as $key => $value) {
@@ -302,6 +304,8 @@ public function search()
 
 
       $this->Cart->Start();
+      $this->Cart->id_province = (isset($data->user)) ? $data->user->id_province : false;
+      $this->Cart->id_shipping = (isset($data->user)) ? $data->user->id_shipping : 1;
 
       if(isset($data->gim)) {
         $this->Cart->gim = $data->gim;
@@ -315,7 +319,6 @@ public function search()
 
         if($coupon)
           $this->Cart->AddDiscount($this->Cart->id,$coupon);
-
       }
       // cart.subtotal = count_cost;
       // cart.total = count_cost - cart.discount;
@@ -330,13 +333,13 @@ public function search()
       $data_update = array(
         'id_gim'=>(isset($data->gim)) ? $data->gim->id_gim : false,
         'id_state'=>2,
-        'id_shipping'=>(isset($data->user)) ? $data->user->id_shipping : false,
         'id_coupon'=>(isset($coupon)) ? $coupon->id_coupon : false,
+        'id_province'=>$this->Cart->id_province,
+        'id_shipping'=>$this->Cart->id_shipping,
         'name'=>(isset($data->user)) ? $data->user->name : false,
         'lastname'=>(isset($data->user)) ? $data->user->lastname : false,
         'address'=>(isset($data->user)) ? $data->user->address : false,
         'postal_code'=>(isset($data->user)) ? $data->user->postal_code : false,
-        'province'=>(isset($data->user)) ? $data->user->province : false,
         'city'=>(isset($data->user)) ? $data->user->city : false,
         'phone'=>(isset($data->user)) ? $data->user->phone : false,
         'mail'=>(isset($data->user)) ? $data->user->mail : false,
@@ -345,9 +348,9 @@ public function search()
         'total'=> $this->Cart->total,
         'iva'=> $this->Cart->iva,
         'gim_discount'=> $this->Cart->gim_discount,
+        'shipping_cost'=> $this->Cart->shipping_cost,
         'created'=>date('Y-m-d H:i:s'),
       );
-
 
       $this->db->where("t.id_cart = '{$this->Cart->id}'");
       $update = $this->db->update('cart as t',$data_update);

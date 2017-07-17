@@ -9,7 +9,9 @@ class CartModel extends CI_Model
     $coupon = array(),
     $subtotal = 0,
     $gim_discount = 0,
+    $id_province = 0,
     $discount = 0,
+    $shipping_cost = 0,
     $total = 0;
 
 
@@ -209,8 +211,27 @@ public function UpdateTotals() {
       $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = 'gim_discount'")->row();
       $gim_discount_porcent = $sql->r;
 
-      $this->gim_discount = $this->total * (int)$gim_discount_porcent / 100;
+      $this->gim_discount = $this->total * (float)$gim_discount_porcent / 100;
       $this->total = $this->total - $this->gim_discount;
+    }
+
+      //     if(cart.total < Data.config.min_to_free_shipping && cart.user && cart.user.id_province ) {
+      //   var province = section(cart.user.id_province,Data.provinces);
+
+      //   cart.user.province = province.province;
+      //   cart.shipping_cost = parseInt(province.shipping);
+      //   cart.total = cart.total + cart.shipping_cost;
+      // }
+
+    $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = 'min_to_free_shipping'")->row();
+    $min_to_free_shipping = $sql->r;
+
+    if( $this->total < $min_to_free_shipping && $this->id_province && $this->id_id_shipping == 2 ) {
+      $sql = $this->db->query("SELECT shipping as r FROM `provinces` WHERE id_province = '{$this->id_province}'")->row();
+      $this->shipping_cost = (float)$sql->r;
+
+      $this->total = $this->total + $this->shipping_cost;
+
     }
 
     $this->iva = $this->total*0.21;

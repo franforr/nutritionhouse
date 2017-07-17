@@ -33,6 +33,15 @@ public function GetSection()
     ";
     return $this->db->query($sql)->result();
 }
+public function GetProvinces()
+{
+ $sql = "select p.id_province as id_province, p.id_province as id, p.province as province, p.shipping as shipping
+    from provinces p
+    where p.active = '1'
+    order by p.province
+    ";
+    return $this->db->query($sql)->result();
+}
 public function GetGim($code,$password)
 {
  $sql = "select t*, f.file as file
