@@ -261,5 +261,15 @@ class DataModel extends CI_Model
     $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = '$var'")->row();
     return $sql->r;
   }
+  public function ProductTitle( $id )
+  {
+    $query = $this->db->query("SELECT title as r FROM `product` WHERE id_product = '$id'")->row();
+    return $query ? $query->r : '';
+  }
+  public function CategoryTitle( $id )
+  {
+    $query = $this->db->query("SELECT category as r FROM `product_category` WHERE id_category = '$id'")->row();
+    return $query ? $query->r : '';
+  }
 
 }

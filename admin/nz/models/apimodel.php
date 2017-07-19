@@ -64,13 +64,21 @@ public function SelectSize()
     return $this->db->query($sql)->result();
 }
 
-public function GetFaq()
+public function GetFaq($id_product=0, $id_category=0)
 {
- $sql = "select p.id_faq as id, p.title as title, p.text as text 
+    if( $id_product && $id_category )
+        $only_in_faq = 0;
+    else
+        $only_in_faq = 1;
+    $sql = "select p.id_faq as id, p.title as title, p.text as text 
     from faq p
-    where p.active = '1'
-    order by p.num
-    ";
+    where p.active = '1'";
+    if($only_in_faq)
+        $sql .= " AND in_faq = 1";
+    if($id_product && $id_category)
+        $sql .= " AND (in_products like '%$id_product%' OR in_categories like '%$id_category%')";
+    $sql .= " order by p.num";
+
     return $this->db->query($sql)->result();
 }
 
@@ -86,7 +94,7 @@ public function GetCatTitle($id_category = 0)
 
   public function GetProduct($id_product = 0)
   {
-    $sql = "select f.file, p.id_gallery, p.id_product as id, pc.category as category, p.title as title, p.cost as price, p.text as text, p.id_state as state, p.related as related, p.id_size as id_size 
+    $sql = "select f.file, p.id_gallery, p.id_product as id, p.id_category as id_category, pc.category as category, p.title as title, p.cost as price, p.text as text, p.id_state as state, p.related as related, p.id_size as id_size 
     from product p
     left join nz_file f on f.id_file = p.id_file
     left join product_category pc on pc.id_category = p.id_category

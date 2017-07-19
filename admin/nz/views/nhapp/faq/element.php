@@ -51,6 +51,63 @@
     'class' => $this->validation->error_class($field),
     'placeholder' => ''
   ))) ?>
+
+<div class="clearfix"></div>
+<? $field = 'in_products' ?>
+<div class="col-md-5 list-<?= $field ?>">
+  <? $this->load->view('app/form', array('item' => array(
+      'type' => 'select',
+      'columns' => 9,
+      'form' => $wgetId,
+      'name' => $field,
+      'data' => $this->Data->SelectProduct(),
+      'label' => $this->lang->line('En Productos'),
+      'placeholder' => ''
+    ))) ?> 
+    <div class="col col-inset col-3">
+         <span style="margin-top:20px" class="btn btn-primary add-new"><i class="glyphicon glyphicon-plus"></i> Agregar</span>
+      </div>
+      <div style="clear:both"></div>
+      <ul class="list-items">
+      </ul>
+</div>
+
+<? $field = 'in_categories' ?>
+<div class="col-md-5 list-<?= $field ?>">
+  <? $this->load->view('app/form', array('item' => array(
+      'type' => 'select',
+      'columns' => 9,
+      'form' => $wgetId,
+      'name' => $field,
+      'data' => $this->Data->SelectProductCategory(),
+      'label' => $this->lang->line('En categorías'),
+      'placeholder' => ''
+    ))) ?> 
+    <div class="col col-inset col-3">
+         <span style="margin-top:20px" class="btn btn-primary add-new"><i class="glyphicon glyphicon-plus"></i> Agregar</span>
+      </div>
+      <div style="clear:both"></div>
+      <ul class="list-items">
+      </ul>
+</div>
+
+
+
+<? $field = 'in_faq'; $this->load->view('app/form', array('item' => array(
+    'type' => 'checkbox',
+    'columns' => 2,
+    'form' => $wgetId,
+    'name' => $field,
+    'label' => $this->lang->line('En FAQs'),
+    'value' => 1,
+    'checked'=> $dataItem[$field],
+    'error' => $this->validation->error($field),
+    'class' => $this->validation->error_class($field),
+    'placeholder' => ''
+  ))) ?>
+
+<div class="clearfix"></div>
+
 <? $field = 'num'; $this->load->view('app/form', array('item' => array(
     'type' => 'number',
     'columns' => 2,
@@ -72,6 +129,44 @@
 </div>
 <script>
 $(document).ready(function() {
+
+  <?php $lists = array('in_products', 'in_categories'); 
+  for ($i = 0; $i < count($lists); $i++):  ?>
+    (function() {
+
+      var LIST = $('.list-<?= $lists[$i] ?>', formGlobal);
+      var SELECT = $('#<?= $lists[$i] ?>Form<?= $wgetId ?>', LIST);
+
+      SELECT.attr('name', '');
+      var create_<?= $lists[$i] ?> = function(id, text){
+        var li = $('<li/>');
+        li.html(text + '<span class="delete-item" style="cursor:pointer;margin-left:20px"><i class="glyphicon glyphicon-trash"></i></span><input type="hidden" value="' + id + '" name="<?= $lists[$i] ?>[]">')
+        li.css('margin-bottom', '5px');
+        $('.delete-item', li).click(function(){
+          li.remove();
+        })
+        $('.list-items',LIST).append(li);
+      };
+      $('.add-new', LIST).click(function(){
+        if(!SELECT.val())
+          return;
+        create_<?= $lists[$i] ?>($(SELECT).val(), $('option:selected', SELECT).text());
+      });
+       <? if($idItem):
+       $item = json_decode($dataItem[$lists[$i]]);
+       if($item && count($item)):
+        foreach($item as $tid):
+        if($i == 0) $title = $this->Data->ProductTitle($tid);
+        else $title = $this->Data->CategoryTitle($tid); ?>
+        create_<?= $lists[$i] ?>('<?= $tid ?>','<?= addslashes($title) ?>');
+      <? endforeach  ?>
+      <? endif  ?>
+      <? endif  ?>
+    }());
+
+  <? endfor;  ?>
+
+
   var formGlobal = $('#widget-form-<?= $wgetId ?>');  
 <? if(!$this->MApp->secure->edit):?>
   formGlobal.addClass('form-disabled');

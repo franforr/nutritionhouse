@@ -49,7 +49,7 @@ class Api extends CI_Controller {
     foreach ($sections as $key => $value) {
       $sections[$key]->accordion = false;
       if($value->id == 10) {
-        $sections[$key]->accordion = $faq;
+        $sections[$key]->accordion = $faq ? $faq : array();
       }
     }
     
@@ -132,6 +132,8 @@ class Api extends CI_Controller {
     unset($product->related);
     $data['product'] = $product;
     $data['related'] = array();
+    $faq = $this->Api->GetFaq($product->id,$product->id_category);
+    $data['faq'] = $faq;
 
 
     if( count($related) ) {

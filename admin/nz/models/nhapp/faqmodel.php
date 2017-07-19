@@ -121,7 +121,10 @@ class FaqModel extends AppModel {
       'title' => $this->input->post('title'),
       'text' => $this->input->post('text'),
       'num' => $this->input->post('num'),
+      'in_faq' => $this->input->post('in_faq') ? 1 : 0,
       'active' => $this->input->post('active') ? 1 : 0,
+      'in_products' => json_encode($this->input->post('in_products')),
+      'in_categories' => json_encode($this->input->post('in_categories')),
     );
     if( $this->id )
       $sql = $this->db->update_string($this->table, $data, "id_faq = '{$this->id}'" );
