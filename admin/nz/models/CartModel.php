@@ -12,6 +12,7 @@ class CartModel extends CI_Model
     $id_province = 0,
     $discount = 0,
     $shipping_cost = 0,
+    $gim_comission = 0,
     $total = 0;
 
 
@@ -190,10 +191,37 @@ public function ItemExistsId( $product = 0 )
   }
 
 public function UpdateTotals() {
-    $SumCost = $this->SumCost();
-  
-    $this->subtotal = $SumCost;
-    $this->total = $this->subtotal;
+
+    $NetCost = 0;
+    $Discount = 0;
+    $DiscountTable = array(
+      (object) array('min' => 1000, 'discount' => 10),
+      (object) array('min' => 3500, 'discount' => 15),
+      (object) array('min' => 7500, 'discount' => 20),
+      (object) array('min' => 15000, 'discount' => 25),
+    );
+    $sql = "select ci.id_item as id, ci.items, p.cost, p.no_discount
+    from cart_item ci 
+    left join product p on p.id_product = ci.id_product
+    where ci.id_cart = '{$this->id}'";
+    $products = $this->db->query($sql)->result();
+    foreach ($products as $p) $NetCost += $p->cost * $p->items; 
+
+    foreach ($DiscountTable as $DiscountValue) 
+    {
+      if($NetCost >= $DiscountValue->min )
+        $Discount = $DiscountValue->discount;
+    }
+    foreach ($products as $p) 
+    {
+      $RealCost = $p->cost;
+      if(!$p->no_discount) $RealCost = $RealCost - ($RealCost * $Discount / 100);
+
+      $this->db->update('cart_item', array('cost_base' => $p->cost, 'cost' => $RealCost), "id_item = '{$p->id}'" );
+    }
+
+    $this->subtotal = $this->SumCost();
+    $this->total = $this->SumCost(1);
 
 
     if($this->coupon) {
@@ -226,16 +254,19 @@ public function UpdateTotals() {
     $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = 'min_to_free_shipping'")->row();
     $min_to_free_shipping = $sql->r;
 
-    if( $this->total < $min_to_free_shipping && $this->id_province && $this->id_id_shipping == 2 ) {
+    if( $this->total < $min_to_free_shipping && $this->id_province && $this->id_shipping == 2 ) {
       $sql = $this->db->query("SELECT shipping as r FROM `provinces` WHERE id_province = '{$this->id_province}'")->row();
       $this->shipping_cost = (float)$sql->r;
 
       $this->total = $this->total + $this->shipping_cost;
-
     }
+
+    $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = 'gim_comission'")->row();
+    $gim_comission_precent = $sql->r;
 
     $this->iva = $this->total*0.21;
     $this->total = $this->total + $this->iva;
+    $this->gim_comission = round($this->total * $gim_comission_precent / 100,2);
 
     return $this;
   }
@@ -254,12 +285,13 @@ public function UpdateTotals() {
       return $this->db->query($sql)->row();
   }
 
-   public function SumCost( $symbol = true )
+   public function SumCost( $discount = false )
   {
     $total = 0;
     if( $this->id ) 
     {
-      $sql = "select SUM(ci.cost * ci.items) as total 
+      $column = $discount ? 'cost' : 'cost_base';
+      $sql = "select SUM(ci.$column * ci.items) as total 
       from cart_item ci 
       left join product p on p.id_product = ci.id_product
       where ci.id_cart = '{$this->id}'";

@@ -113,21 +113,28 @@
     'value' => $dataItem[$field],
     'placeholder' => ''
   ))) ?>
-  <? $field = 'more_categories'; $this->load->view('app/form', array('item' => array(
-      'type' => 'select',
-      'columns' => 9,
-      'form' => $wgetId,
-      'name' => $field,
-      'data' => $select['SelectProductCategory'],
-      'label' => $this->lang->line('Categorías complementarias'),
-      'placeholder' => ''
-    ))) ?> 
-    <div class="col col-inset col-3">
-         <span style="margin-top:20px" class="btn btn-primary add-product2"><i class="glyphicon glyphicon-plus"></i> Agregar</span>
-      </div>
-      <div style="clear:both"></div>
-        <ul class="products-list2">
-        </ul>
+  <div class="clearfix"></div>
+    <? $field = 'more_categories' ?>
+    <div class="col-md-12 list-<?= $field ?>">
+      <? $this->load->view('app/form', array('item' => array(
+          'type' => 'select',
+          'columns' => 9,
+          'form' => $wgetId,
+          'name' => $field,
+          'data' => $this->Data->SelectProductCategory(),
+          'label' => $this->lang->line('Categorías complementarias'),
+          'placeholder' => ''
+        ))) ?> 
+        <div class="col col-inset col-3">
+             <span style="margin-top:20px" class="btn btn-primary add-new"><i class="glyphicon glyphicon-plus"></i> Agregar</span>
+          </div>
+          <div style="clear:both"></div>
+          <ul class="list-items">
+          </ul>
+    </div>
+
+
+
 </div>
 
 
@@ -178,7 +185,7 @@
     'placeholder' => ''
   ))) ?>
 
-
+<?/*
 <div style="margin-top: 15px">
   <? $field = 'id_product_related'; $this->load->view('app/form', array('item' => array(
       'type' => 'select',
@@ -194,6 +201,44 @@
       </div>
       <div style="clear:both"></div>
       <ul class="products-list">
+      </ul>
+</div>
+*/?>
+<? $field = 'related' ?>
+<div class="col-md-6 list-<?= $field ?>">
+  <? $this->load->view('app/form', array('item' => array(
+      'type' => 'select',
+      'columns' => 9,
+      'form' => $wgetId,
+      'name' => $field,
+      'data' => $this->Data->SelectProduct(),
+      'label' => $this->lang->line('Productos complementarios o relacionados'),
+      'placeholder' => ''
+    ))) ?> 
+    <div class="col col-inset col-3">
+         <span style="margin-top:20px" class="btn btn-primary add-new"><i class="glyphicon glyphicon-plus"></i> Agregar</span>
+      </div>
+      <div style="clear:both"></div>
+      <ul class="list-items">
+      </ul>
+</div>
+
+<? $field = 'related_gim' ?>
+<div class="col-md-6 list-<?= $field ?>">
+  <? $this->load->view('app/form', array('item' => array(
+      'type' => 'select',
+      'columns' => 9,
+      'form' => $wgetId,
+      'name' => $field,
+      'data' => $this->Data->SelectProduct(),
+      'label' => $this->lang->line('Productos complementarios con prioridad para gimnasios'),
+      'placeholder' => ''
+    ))) ?> 
+    <div class="col col-inset col-3">
+         <span style="margin-top:20px" class="btn btn-primary add-new"><i class="glyphicon glyphicon-plus"></i> Agregar</span>
+      </div>
+      <div style="clear:both"></div>
+      <ul class="list-items">
       </ul>
 </div>
 
@@ -213,53 +258,41 @@
 $(document).ready(function() {
   var formGlobal = $('#widget-form-<?= $wgetId ?>');
 
-$('.form-post-id_product_related', formGlobal).attr('name', '');
-  var createProductRelated = function(id, text){
-    var li = $('<li/>');
-    li.html(text + '<span class="delete-item" style="cursor:pointer;margin-left:20px"><i class="glyphicon glyphicon-trash"></i></span><input type="hidden" value="' + id + '" name="related[]">')
-    li.css('margin-bottom', '5px');
-    $('.delete-item', li).click(function(){
-      li.remove();
-    })
-    $('.products-list').append(li);
-  };
-  $('.add-product', formGlobal).click(function(){
-    if(!$('.form-post-id_product_related', formGlobal).val())
-      return;
-    createProductRelated($('.form-post-id_product_related', formGlobal).val(), $('.form-post-id_product_related option:selected').text());
-  });
-   <? if($idItem):
-   $item = json_decode($dataItem['related']);
-   if($item && count($item)):
-    foreach($item as $tid): $t = $this->model->DataElement($tid); ?>
-    createProductRelated('<?= $tid ?>','<?= addslashes($t['title']) ?>');
-  <? endforeach  ?>
-  <? endif  ?>
-  <? endif  ?>
+  <?php $lists = array('related', 'related_gim', 'more_categories'); 
+  for ($i = 0; $i < count($lists); $i++):  ?>
+    (function() {
 
-$('.form-post-more_categories', formGlobal).attr('name', '');
-  var createProductRelated2 = function(id, text){
-    var li = $('<li/>');
-    li.html(text + '<span class="delete-item" style="cursor:pointer;margin-left:20px"><i class="glyphicon glyphicon-trash"></i></span><input type="hidden" value="' + id + '" name="more_categories[]">')
-    li.css('margin-bottom', '5px');
-    $('.delete-item', li).click(function(){
-      li.remove();
-    })
-    $('.products-list2').append(li);
-  };
-  $('.add-product2', formGlobal).click(function(){
-    if(!$('.form-post-more_categories', formGlobal).val())
-      return;
-    createProductRelated2($('.form-post-more_categories', formGlobal).val(), $('.form-post-more_categories option:selected').text());
-  });
-   <? if($idItem):
-   $items = json_decode($dataItem['more_categories']);
-   if($items && count($items)):
-    foreach($items as $tid): $t = $this->model->DataCategory($tid); ?>
-    createProductRelated2('<?= $tid ?>','<?= addslashes($t['category']) ?>');
-  <? endforeach  ?>
-  <? endif ?>
-  <? endif ?>
+      var LIST = $('.list-<?= $lists[$i] ?>', formGlobal);
+      var SELECT = $('#<?= $lists[$i] ?>Form<?= $wgetId ?>', LIST);
+
+      SELECT.attr('name', '');
+      var create_<?= $lists[$i] ?> = function(id, text){
+        var li = $('<li/>');
+        li.html(text + '<span class="delete-item" style="cursor:pointer;margin-left:20px"><i class="glyphicon glyphicon-trash"></i></span><input type="hidden" value="' + id + '" name="<?= $lists[$i] ?>[]">')
+        li.css('margin-bottom', '5px');
+        $('.delete-item', li).click(function(){
+          li.remove();
+        })
+        $('.list-items',LIST).append(li);
+      };
+      $('.add-new', LIST).click(function(){
+        if(!SELECT.val())
+          return;
+        create_<?= $lists[$i] ?>($(SELECT).val(), $('option:selected', SELECT).text());
+      });
+       <? if($idItem):
+       $item = json_decode($dataItem[$lists[$i]]);
+       if($item && count($item)):
+        foreach($item as $tid):
+        if($i == 2) $title = $this->Data->CategoryTitle($tid);
+        else $title = $this->Data->ProductTitle($tid); ?>
+        create_<?= $lists[$i] ?>('<?= $tid ?>','<?= addslashes($title) ?>');
+      <? endforeach  ?>
+      <? endif  ?>
+      <? endif  ?>
+    }());
+
+  <? endfor;  ?>
 
 <? if(!$this->MApp->secure->edit):?>
   formGlobal.addClass('form-disabled');

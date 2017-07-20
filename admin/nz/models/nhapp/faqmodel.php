@@ -36,13 +36,13 @@ class FaqModel extends AppModel {
     $sql = "1";
     if(!$filter) 
       return $sql;  
-    $text = $this->input->post('filter-text') ? $this->input->post('filter-text') : false;          
+    $text = $this->input->post('filter-text') ? $this->input->post('filter-text') : false;
     if(!$text)      
       $text = $this->input->post('sSearch') ? $this->input->post('sSearch') : false;
     if($this->input->post('filter-active'))
       $sql .= " AND t.active = '1'";
     if($text)
-      $sql .= " AND ( t.title like '%{$text}%'  OR  t.text like '%{$text}%'  OR t.id_faq = '{$text}') ";   
+      $sql .= " AND ( t.title like '%{$text}%'  OR  t.text like '%{$text}%'  OR t.id_faq = '{$text}') ";
     if($this->input->post('filter-id'))
       $sql .= " AND t.id_faq = '". $this->input->post('filter-id') ."'";  
     return $sql;

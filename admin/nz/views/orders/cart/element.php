@@ -181,6 +181,7 @@
           <th>Tamaño</th>
           <th>Cantidad</th>
           <th>Costo individual</th>
+          <th>Costo c/descuento</th>
           <th>Costo</th>
         </tr>
       </thead>
@@ -195,6 +196,7 @@
           <th style=" vertical-align: middle; "><small><?= $item->category ?></small></th>          
           <th style=" vertical-align: middle; "><small><?= $item->size ?></small></th>          
           <th style=" vertical-align: middle; "><small><?= $item->items ?></small></th>          
+          <th style=" vertical-align: middle; "><small><?= round($item->cost_base,2) ?></small></th>          
           <th style=" vertical-align: middle; "><small><?= round($item->cost,2) ?></small></th>          
           <th style=" vertical-align: middle; "><small><?= round($item->cost * $item->items,2) ?></small></th>          
         </tr>
@@ -244,7 +246,7 @@
         <tr>
           <th colspan="1">Comisión gimasio</th>
           <th colspan="5" style="color:grey"><?= $dataItem['gim'] ?></th>
-          <th colspan="2" style="color:red">$ <?= $dataItem['total'] ?></th>
+          <th colspan="2" style="color:red">$ <?= $dataItem['gim_comission'] ?></th>
         </tr>
       </thead>
     </table>

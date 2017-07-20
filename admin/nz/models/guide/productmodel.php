@@ -203,6 +203,7 @@ class ProductModel extends AppModel {
       'promotion' => $this->input->post('promotion') ? 1 : 0,
       'highlight' => $this->input->post('highlight') ? 1 : 0,
       'related' => json_encode($this->input->post('related')),
+      'related_gim' => json_encode($this->input->post('related_gim')),
       'more_categories' => json_encode($this->input->post('more_categories')),
       'active' => $this->input->post('active') ? 1 : 0,
     );

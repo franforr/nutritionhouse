@@ -129,6 +129,9 @@ class Api extends CI_Controller {
     
     $data = [];
     $related = json_decode($product->related);
+    if($this->input->post('gim')!='false')
+      $related = array_merge(json_decode($product->related_gim), $related);
+
     unset($product->related);
     $data['product'] = $product;
     $data['related'] = array();
@@ -158,7 +161,6 @@ class Api extends CI_Controller {
       }
       if(isset($extra_related) && isset($extra_related)) {
         foreach ($extra_related['result'] as $key => $value) {
-          
           $value->file = $value->file ? thumb($value->file,500,500) : 'img/default.svg';
           $value->price = round($value->price);
           $data['related'][] = $value;
@@ -333,7 +335,7 @@ public function search()
       $this->Cart->GetCart();
 
       $data_update = array(
-        'id_gim'=>(isset($data->gim)) ? $data->gim->id_gim : false,
+        'id_gim'=>(isset($data->gim) && count($data->gim)) ? $data->gim->id_gim : false,
         'id_state'=>2,
         'id_coupon'=>(isset($coupon)) ? $coupon->id_coupon : false,
         'id_province'=>$this->Cart->id_province,
@@ -351,6 +353,7 @@ public function search()
         'iva'=> $this->Cart->iva,
         'gim_discount'=> $this->Cart->gim_discount,
         'shipping_cost'=> $this->Cart->shipping_cost,
+        'gim_comission'=> $this->Cart->gim_comission,
         'created'=>date('Y-m-d H:i:s'),
       );
 

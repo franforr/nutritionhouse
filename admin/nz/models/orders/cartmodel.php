@@ -285,6 +285,7 @@ class CartModel extends AppModel {
            t.id_product as id_product,
            t.items as items,
            t.cost as cost,
+           t.cost_base as cost_base,
            p.title as title,
            p.text as text,
            pc.category as category,
