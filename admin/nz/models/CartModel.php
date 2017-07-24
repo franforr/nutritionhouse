@@ -13,6 +13,7 @@ class CartModel extends CI_Model
     $discount = 0,
     $shipping_cost = 0,
     $gim_comission = 0,
+    $discount_per_products = 0,
     $total = 0;
 
 
@@ -22,14 +23,18 @@ class CartModel extends CI_Model
 
     if ($this->id == 0) {
       $this->id = $this->CreateCart();
-    
+
+      return $this;
     } else {
       $cart = $this->GetCart($this->id);
-
       if( ! $cart ) {
+
        return $this->Start(0);
+      } else {
+        return $this;
       }
     }
+
   }
 
   public function CreateCart()
@@ -50,9 +55,9 @@ class CartModel extends CI_Model
     return $id;
   }
 
-public function GetCart( $id = 0 )
+  public function GetCart( $id = 0 )
   {
-    if( !$id ) $id = $this->id;
+    $this->id = $id ? $id : $this->id;
 
     $this->db->select("t.code,
                        t.id_user,
@@ -64,10 +69,11 @@ public function GetCart( $id = 0 )
                        t.modified,
                        t.id_coupon,
                        cst.state");
-    $this->db->where("t.id_cart = {$this->id}");
+    $this->db->where("t.id_cart = '{$this->id}'");
     $this->db->join('cart_shipping cs', 't.id_shipping = cs.id_shipping', 'left');
     $this->db->join('cart_state cst', 't.id_state = cst.id_state', 'left');
     $data = $this->db->get('cart t')->row();
+
     if (! $data) 
      return false;
    
@@ -80,6 +86,7 @@ public function GetCart( $id = 0 )
     $this->modified = $data->modified;
     $this->state = $data->state;
     $this->id_coupon = $data->id_coupon;
+    $this->coupon = $this->GetCoupon(0,1,$this->id_coupon);
     $this->items = $this->ListItems();
     $this->count_items = count($this->items);
     $this->count_total = $this->TotalItems();
@@ -99,16 +106,28 @@ public function GetCart( $id = 0 )
     ci.id_cart,
     ci.id_product,
     ci.items,
-    ci.cost
+    ci.items as quantity,
+    f.file as file,
+    ci.cost,
+    ci.cost as price,
+    ci.cost_base as price_base,
+    p.title as title,
+    p.id_state as state
     from cart_item ci
     left join product p on p.id_product = ci.id_product
+    left join nz_file f on f.id_file = p.id_file
     where 
     ci.id_cart = '{$id}'
     order by ci.id_item asc";
 
-    $r = $this->db->query($sql);
+    $r = $this->db->query($sql)->result();
+    if($r) {
+      foreach ($r as $key => $value) {
+        $r[$key]->file = $value->file ? thumb($value->file,500,500) : false;
+      }
+    }
 
-    return $r->result();
+    return $r;
   }
 
   public function TotalItems()
@@ -121,6 +140,7 @@ public function GetCart( $id = 0 )
 
 public function AddProduct( $product = 0, $items = 1  )
   {
+    if(!$items) $items = 1;
     if( !$this->id ) $this->id;
     $info = $this->ProductInfo($product);
 
@@ -136,7 +156,9 @@ public function AddProduct( $product = 0, $items = 1  )
       $this->db->query($sql);
 
       if( ! $this->InCart($product) )
-        $this->RemoveItem($itemret);
+        $this->RemoveItem($product);
+
+      $this->UpdateTotals();
 
       return $itemret;
     }    
@@ -148,6 +170,8 @@ public function AddProduct( $product = 0, $items = 1  )
       'cost' => $info->cost
     ));
     $this->db->query($sql);
+
+    $this->UpdateTotals();
 
     return $this->db->insert_id();
   }
@@ -182,11 +206,11 @@ public function ItemExistsId( $product = 0 )
     return $row ? $row->items : 0;
   }
 
-  public function RemoveItem( $iditem = 0 )
+  public function RemoveItem( $id_product = 0 )
   {
     if( !$this->id ) 
       return;
-    $sql = "delete from cart_item where id_item = '{$iditem}' and id_cart = '{$this->id}'";
+    $sql = "delete from cart_item where id_product = '{$id_product}' and id_cart = '{$this->id}'";
     return $this->db->query($sql);
   }
 
@@ -222,18 +246,19 @@ public function UpdateTotals() {
 
     $this->subtotal = $this->SumCost();
     $this->total = $this->SumCost(1);
+    $this->discount_per_products = $this->subtotal - $this->total;
 
-
-    if($this->coupon) {
-
-      if($this->coupon->id_type == 1) {
-        $this->discount = $this->total*$this->discount_percent/100;
-      } else {
-        $this->discount = $this->discount_money;
-      }
+    // if($this->coupon) {
+    //   if($this->coupon->id_type == 1) {
+    //     $this->discount = $this->total * (int)$this->discount_percent / 100;
+    //   } else {
+    //     $this->discount = $this->discount_money;
+    //   }
       
-      $this->total = $this->total - $this->discount;
-    }
+    //   // var_dump($this);
+    //   $this->total = $this->total - $this->discount;
+    // }
+
     
     if($this->gim) {
       $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = 'gim_discount'")->row();
@@ -264,8 +289,8 @@ public function UpdateTotals() {
     $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = 'gim_comission'")->row();
     $gim_comission_precent = $sql->r;
 
-    $this->iva = $this->total*0.21;
-    $this->total = $this->total + $this->iva;
+    // $this->iva = $this->total*0.21;
+    // $this->total = $this->total + $this->iva;
     $this->gim_comission = round($this->total * $gim_comission_precent / 100,2);
 
     return $this;
@@ -325,16 +350,16 @@ public function UpdateTotals() {
 
   }
 
-  public function GetCoupon( $code = 0, $force = 0 )
+  public function GetCoupon( $code = 0, $force = 0, $id_coupon = 0 )
   {
-    
     $date = date("Y-m-d");
     $sql = "
      select co.id_coupon, co.id_type, co.name, co.code, co.value
      from coupon co
-     left join coupon_type t on t.id_type = co.id_type
-     where co.code = '{$code}'";
-    if(!$force) $sql .= "and total >= used and expire >= '{$date}'";
+     left join coupon_type t on t.id_type = co.id_type";
+    if ($code) $sql .= " where co.code = '{$code}'";
+    if ($id_coupon) $sql .= " where co.id_coupon = '{$id_coupon}'";
+    if(!$force) $sql .= " and total >= used and expire >= '{$date}'";
     return $this->db->query($sql)->row();
     
   }
@@ -362,7 +387,24 @@ public function UpdateTotals() {
        $this->db->query($sql);
     }
     $this->coupon = $coupon;
+
+    $this->UpdateTotals();
+    // $this->saveTotals();
+
     return $this;
+  }
+  public function saveTotals()
+  {
+    $data_update = array(
+      'subtotal'=> $this->Cart->subtotal,
+      'total'=> $this->Cart->total,
+      'gim_discount'=> $this->Cart->gim_discount,
+      'shipping_cost'=> $this->Cart->shipping_cost,
+      'gim_comission'=> $this->Cart->gim_comission,
+    );
+
+    $this->db->where("t.id_cart = '{$this->Cart->id}'");
+    $update = $this->db->update('cart as t',$data_update);
   }
 
 }
