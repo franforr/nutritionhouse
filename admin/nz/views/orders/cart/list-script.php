@@ -9,9 +9,11 @@ var DataTableFn = function(){
     aoData.push( { "name": "filter-id_state", "value": $('#id_stateFormSelect<?= $wgetId ?>').val() } );
     aoData.push( { "name": "filter-id_shipping", "value": $('#id_shippingFormSelect<?= $wgetId ?>').val() } );
     aoData.push( { "name": "filter-text", "value": $('#textFormInput<?= $wgetId ?>').val() } );
+
     <? $this->load->view("script/datatable/order.js") ?>
   };
   configDT.aoColumns = [
+      { "sTitle": "<?= $this->lang->line("Nº") ?>", "mData": "code", "sType": "string"},
       { "sTitle": "<?= $this->lang->line("Estado") ?>", "mData": "state", "sType": "string"},
           { "bVisible": true, "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("E-mail") ?>", "mData": "mail", "sType": "string"},
   { "sClass": "text-align-center", "sTitle": "<?= $this->lang->line("Nombre") ?>", "mData": "name", "sType": "string"},

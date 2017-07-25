@@ -4,7 +4,7 @@
   <input type="hidden" value="0" name="goback" class="form-post-goback" />
   <div class="row page-title-row">
         <div class="col-xs-12 col-sm-10 col-md-10 col-lg-8">
-      <h1 class="page-title txt-color-blueDark"><?= $appTitleIco ?><?= prep_app_title($appTitle) ?></h1>
+      <h1 class="page-title txt-color-blueDark"><?= $appTitleIco ?>Pedido Nº <?= $dataItem['code'] ?></h1>
     </div>
     <? $this->load->view("app/element/buttons-header", array('alt' => true)) ?>   
       </div>
@@ -170,7 +170,7 @@
   <?php $items = $dataItem['items']; ?>
   <div class="clearfix"></div>
   <div class="col col-md-12">
-  <h1>Pedido: </h1>
+  <h1>Pedido Nº <?= $dataItem['code'] ?>: </h1>
 
     <table class="table table-hover">
       <thead>

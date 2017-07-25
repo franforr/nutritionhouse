@@ -296,12 +296,55 @@ public function search()
     $gim = $this->Cart->GetGim($this->input->post('code'), $this->input->post('password'));
 
     if ($gim) {
+      $this->Cart->AddGim($id_cart, $gim->id_gim);
       $gim->file = $gim->file ? thumb($gim->file,200,150) : false;
       echo json_encode(array( 'error'=>0, 'gim'=> $gim ));  
     }
     else
       echo json_encode(array( 'error'=>1, 'message'=> 'Gimnasio o contraseña incorrectas.' ));  
     
+  }
+  public function remove_gim($id_cart) {
+    $this->load->model('CartModel', 'Cart');
+    $this->Cart->GetCart($id_cart);
+
+    $this->Cart->AddGim($id_cart, 0);
+    echo json_encode(array( 'error'=>0, 'cart'=> $this->Cart ));  
+    
+  }
+
+  public function set_user($id_cart) {
+
+    if($this->input->post())
+    {
+      $this->load->model('CartModel', 'Cart');
+      $data = json_decode($this->input->post('data'));
+
+      $this->Cart->GetCart($id_cart);
+
+      $data_update = array(
+        'id_province'=> $this->input->post('id_province'),
+        'id_shipping'=> $this->input->post('id_shipping') ? $this->input->post('id_shipping') : 1,
+        'name'=> $this->input->post('name'),
+        'lastname'=>$this->input->post('lastname'),
+        'address'=>$this->input->post('address'),
+        'postal_code'=>$this->input->post('postal_code'),
+        'city'=>$this->input->post('city'),
+        'phone'=>$this->input->post('phone'),
+        'mail'=>$this->input->post('mail'),
+      );
+
+
+      $this->db->where("t.id_cart = '{$this->Cart->id}'");
+      $update = $this->db->update('cart as t',$data_update);
+
+      // foreach ($data_update as $key => $value) {
+      //   $this->Cart->$key = $value;
+      // }
+      $this->Cart->GetCart($id_cart);
+
+      echo json_encode(array( 'error'=>0, 'cart'=>$this->Cart ));
+    }
   }
 
   public function confirm_buy($id_cart) {
@@ -313,57 +356,15 @@ public function search()
 
       $this->Cart->GetCart($id_cart);
 
-      $this->Cart->id_province = (isset($data->user)) ? $data->user->id_province : false;
-      $this->Cart->id_shipping = (isset($data->user)) ? $data->user->id_shipping : 1;
-
-      // foreach ($data->items as $k => $item) {
-      //   $this->Cart->AddProduct($item->id_product,$item->quantity);
-      // }
-      // if(isset($data->coupon) && isset($data->coupon->code)) {
-      //   $coupon = $this->Cart->GetCoupon($data->coupon->code, 1);
-
-      //   if($coupon)
-      //     $this->Cart->AddDiscount($this->Cart->id,$coupon);
-      // }
-      // cart.subtotal = count_cost;
-      // cart.total = count_cost - cart.discount;
-      // cart.gim_discount = (cart.gim.active) ? Math.round(cart.total * 5 / 100, 2) : 0;
-      // cart.total = cart.total - cart.gim_discount;
-      // cart.iva = Math.round(cart.total * 21 / 100, 2);
-      // cart.total = cart.total + cart.iva;
-
-
-      $this->Cart->GetCart();
-
       $data_update = array(
-        'id_gim'=>(isset($data->gim) && count($data->gim)) ? $data->gim->id_gim : false,
         'id_state'=>2,
-        'id_coupon'=>(isset($coupon)) ? $coupon->id_coupon : false,
-        'id_province'=>$this->Cart->id_province,
-        'id_shipping'=>$this->Cart->id_shipping,
-        'name'=>(isset($data->user)) ? $data->user->name : false,
-        'lastname'=>(isset($data->user)) ? $data->user->lastname : false,
-        'address'=>(isset($data->user)) ? $data->user->address : false,
-        'postal_code'=>(isset($data->user)) ? $data->user->postal_code : false,
-        'city'=>(isset($data->user)) ? $data->user->city : false,
-        'phone'=>(isset($data->user)) ? $data->user->phone : false,
-        'mail'=>(isset($data->user)) ? $data->user->mail : false,
-        'desc1'=>(isset($this->Cart->discount)) ? $this->Cart->discount : false,
-        'subtotal'=> $this->Cart->subtotal,
-        'total'=> $this->Cart->total,
-        // 'iva'=> $this->Cart->iva,
-        'gim_discount'=> $this->Cart->gim_discount,
-        'shipping_cost'=> $this->Cart->shipping_cost,
-        'gim_comission'=> $this->Cart->gim_comission,
-        'created'=>date('Y-m-d H:i:s'),
+        'modified'=>date('Y-m-d H:i:s'),
       );
 
       $this->db->where("t.id_cart = '{$this->Cart->id}'");
       $update = $this->db->update('cart as t',$data_update);
 
       echo json_encode(array( 'error'=>0 ));
-
-
     }
   }
 }

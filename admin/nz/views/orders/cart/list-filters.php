@@ -11,7 +11,7 @@
       <section class="col-filter col col-2">
         <label for="id_stateFormSelect<?= $wgetId ?>" class="label"><?= $this->lang->line('Estado') ?></label>
         <label class="select">
-          <?= form_dropdown('', $select['SelectCartState'], '', "id='id_stateFormSelect{$wgetId}'") ?>
+          <?= form_dropdown('', $select['SelectCartState'], '2', "id='id_stateFormSelect{$wgetId}'") ?>
           <i></i>
         </label>
       </section>    

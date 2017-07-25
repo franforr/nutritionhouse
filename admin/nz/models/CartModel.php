@@ -14,6 +14,7 @@ class CartModel extends CI_Model
     $shipping_cost = 0,
     $gim_comission = 0,
     $discount_per_products = 0,
+    $id_gim = 0,
     $total = 0;
 
 
@@ -60,7 +61,6 @@ class CartModel extends CI_Model
     $this->id = $id ? $id : $this->id;
 
     $this->db->select("t.code,
-                       t.id_user,
                        t.comments,
                        t.subtotal,
                        t.total,
@@ -68,16 +68,41 @@ class CartModel extends CI_Model
                        t.coupon_1,
                        t.modified,
                        t.id_coupon,
+                       t.id_gim,
+                       t.id_province,
+                       t.id_shipping,
+                       t.name,
+                       t.lastname,
+                       t.address,
+                       t.postal_code,
+                       t.city,
+                       t.phone,
+                       t.mail,
+                       pvs.province,
+                       pvs.shipping as shipping_cost,
                        cst.state");
     $this->db->where("t.id_cart = '{$this->id}'");
     $this->db->join('cart_shipping cs', 't.id_shipping = cs.id_shipping', 'left');
+    $this->db->join('provinces pvs', 't.id_province = pvs.id_province', 'left');
     $this->db->join('cart_state cst', 't.id_state = cst.id_state', 'left');
     $data = $this->db->get('cart t')->row();
+
+// var_dump($data);die;
 
     if (! $data) 
      return false;
    
-    $this->id_user = $data->id_user;
+    $this->id_cart = $this->id;
+    $this->id_gim = $data->id_gim;
+    $this->id_province = $data->id_province;
+    $this->id_shipping = $data->id_shipping;
+    $this->name = $data->name;
+    $this->lastname = $data->lastname;
+    $this->address = $data->address;
+    $this->postal_code = $data->postal_code;
+    $this->city = $data->city;
+    $this->phone = $data->phone;
+    $this->mail = $data->mail;
     $this->comments = $data->comments;
     $this->total = $data->total;
     $this->subtotal = $data->subtotal;
@@ -86,12 +111,13 @@ class CartModel extends CI_Model
     $this->modified = $data->modified;
     $this->state = $data->state;
     $this->id_coupon = $data->id_coupon;
+    $this->province = $data->province;
+    $this->shipping_cost = $data->shipping_cost;
     $this->coupon = $this->GetCoupon(0,1,$this->id_coupon);
     $this->items = $this->ListItems();
     $this->count_items = count($this->items);
     $this->count_total = $this->TotalItems();
     $this->UpdateTotals();
-
     return $this;
   }
 
@@ -260,7 +286,8 @@ public function UpdateTotals() {
     // }
 
     
-    if($this->gim) {
+      // var_dump($this);die;
+    if($this->id_gim) {
       $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = 'gim_discount'")->row();
       $gim_discount_porcent = $sql->r;
 
@@ -268,22 +295,13 @@ public function UpdateTotals() {
       $this->total = $this->total - $this->gim_discount;
     }
 
-      //     if(cart.total < Data.config.min_to_free_shipping && cart.user && cart.user.id_province ) {
-      //   var province = section(cart.user.id_province,Data.provinces);
-
-      //   cart.user.province = province.province;
-      //   cart.shipping_cost = parseInt(province.shipping);
-      //   cart.total = cart.total + cart.shipping_cost;
-      // }
-
     $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = 'min_to_free_shipping'")->row();
     $min_to_free_shipping = $sql->r;
 
-    if( $this->total < $min_to_free_shipping && $this->id_province && $this->id_shipping == 2 ) {
-      $sql = $this->db->query("SELECT shipping as r FROM `provinces` WHERE id_province = '{$this->id_province}'")->row();
-      $this->shipping_cost = (float)$sql->r;
-
+    if( $this->total < $min_to_free_shipping ) {
       $this->total = $this->total + $this->shipping_cost;
+    } else {
+      $this->shipping_cost = 0;
     }
 
     $sql = $this->db->query("SELECT value as r FROM `config` WHERE var = 'gim_comission'")->row();
@@ -292,6 +310,9 @@ public function UpdateTotals() {
     // $this->iva = $this->total*0.21;
     // $this->total = $this->total + $this->iva;
     $this->gim_comission = round($this->total * $gim_comission_precent / 100,2);
+
+    $this->saveTotals();
+
 
     return $this;
   }
@@ -389,7 +410,6 @@ public function UpdateTotals() {
     $this->coupon = $coupon;
 
     $this->UpdateTotals();
-    // $this->saveTotals();
 
     return $this;
   }
@@ -401,6 +421,16 @@ public function UpdateTotals() {
       'gim_discount'=> $this->Cart->gim_discount,
       'shipping_cost'=> $this->Cart->shipping_cost,
       'gim_comission'=> $this->Cart->gim_comission,
+    );
+
+    $this->db->where("t.id_cart = '{$this->Cart->id}'");
+    $update = $this->db->update('cart as t',$data_update);
+  }
+
+  public function AddGim($id_cart=0,$id_gim=0)
+  {
+    $data_update = array(
+      'id_gim'=> $id_gim,
     );
 
     $this->db->where("t.id_cart = '{$this->Cart->id}'");
