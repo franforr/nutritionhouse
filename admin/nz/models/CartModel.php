@@ -3,6 +3,7 @@
 class CartModel extends CI_Model
 {
   public
+    $table = 'cart',
     $id = 0,
     $items = array(),
     $gim = array(),
@@ -435,6 +436,84 @@ public function UpdateTotals() {
 
     $this->db->where("t.id_cart = '{$this->Cart->id}'");
     $update = $this->db->update('cart as t',$data_update);
+  }
+
+  public function DataElement( $id = 0, $null = false)
+  {
+    $ret = array();
+    if($id)
+    {
+      $sql = "SELECT t.id_cart as id, t.*,
+      lj0.name as gim,
+      lj1.state as state,
+      lj2.shipping as shipping,
+      lj3.name as coupon,      
+      lj3.id_type as coupon_type, 
+      lj4.province as province,     
+      lj3.value as coupon_value      
+      FROM {$this->table} as t      
+      LEFT JOIN gim lj0 on t.id_gim = lj0.id_gim       
+      LEFT JOIN cart_state lj1 on t.id_state = lj1.id_state       
+      LEFT JOIN cart_shipping lj2 on t.id_shipping = lj2.id_shipping       
+      LEFT JOIN coupon lj3 on t.id_coupon = lj3.id_coupon    
+      LEFT JOIN provinces lj4 on t.id_province = lj4.id_province      
+   
+      WHERE t.id_cart = '{$id}' 
+      LIMIT 0, 1";
+      $ret = $this->db->query($sql)->row_array();
+
+      $ret['items'] = $this->CartItems($id);
+      if($ret) return $ret;
+      if($null) return false;
+    }    
+    $ret['id_gim'] = $this->input->post() ? $this->input->post('id_gim') : '';
+    $ret['id_state'] = $this->input->post() ? $this->input->post('id_state') : '';
+    $ret['id_shipping'] = $this->input->post() ? $this->input->post('id_shipping') : '';
+    $ret['name'] = $this->input->post() ? $this->input->post('name') : '';
+    $ret['lastname'] = $this->input->post() ? $this->input->post('lastname') : '';
+    $ret['address'] = $this->input->post() ? $this->input->post('address') : '';
+    $ret['postal_code'] = $this->input->post() ? $this->input->post('postal_code') : '';
+    $ret['province'] = $this->input->post() ? $this->input->post('province') : '';
+    $ret['city'] = $this->input->post() ? $this->input->post('city') : '';
+    $ret['phone'] = $this->input->post() ? $this->input->post('phone') : '';
+    $ret['mail'] = $this->input->post() ? $this->input->post('mail') : '';
+    $ret['created'] = $this->input->post() ? $this->input->post('created') : '';
+    $ret['modified'] = $this->input->post() ? $this->input->post('modified') : '';
+    $ret['comments'] = $this->input->post() ? $this->input->post('comments') : '';
+    $ret['coupon_1'] = $this->input->post() ? $this->input->post('coupon_1') : '';
+    $ret['subtotal'] = $this->input->post() ? $this->input->post('subtotal') : '';
+    $ret['desc1'] = $this->input->post() ? $this->input->post('desc1') : '';
+    $ret['total'] = $this->input->post() ? $this->input->post('total') : '';
+
+    return $ret;
+  }
+    
+  public function CartItems( $id = 0 )
+  {
+    if($id)
+    {
+      $sql = "SELECT 
+           t.id_item as id_item,
+           t.id_product as id_product,
+           t.items as items,
+           t.cost as cost,
+           t.cost_base as cost_base,
+           p.title as title,
+           p.text as text,
+           pc.category as category,
+           ps.size as size,
+           nf.file as file
+      FROM {$this->table}_item as t      
+      LEFT JOIN product p on t.id_product = p.id_product       
+      LEFT JOIN product_category pc on p.id_category = pc.id_category       
+      LEFT JOIN product_size ps on p.id_size = ps.id_size    
+      LEFT JOIN nz_file nf on p.id_file = nf.id_file    
+      WHERE t.id_cart = '{$id}' AND t.active = 1";
+      $ret = $this->db->query($sql)->result();
+      if($ret) return $ret;
+    }    
+
+    return $ret;
   }
 
 }

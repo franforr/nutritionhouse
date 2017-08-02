@@ -234,11 +234,6 @@
           <th colspan="2"><?= $dataItem['shipping_cost'] ?></th>
         </tr>
         <tr>
-          <th colspan="5">IVA</th>
-          <th colspan="1"></th>
-          <th colspan="2"><?= $dataItem['iva'] ?></th>
-        </tr>
-        <tr>
           <th colspan="5">Total</th>
           <th colspan="1"></th>
           <th colspan="2" style="color:green">$ <?= $dataItem['total'] ?></th>

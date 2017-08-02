@@ -364,6 +364,11 @@ public function search()
       $this->db->where("t.id_cart = '{$this->Cart->id}'");
       $update = $this->db->update('cart as t',$data_update);
 
+      $this->load->model('MailModel', 'Mail');
+      $dataElement = $this->Cart->DataElement($id_cart);
+      $title = 'Nuevo Pedido Nº'.$dataElement['code'];
+      $text = '<p>Hemos recibido tu pedido, una continuación detallamos todos los detalles para que lleves el control del mismo.</p><p>Vamos a mantenerte al tanto de todo el proceso. Gracias!</p>';
+      $this->Mail->SendCart( array($dataElement['mail']),$dataElement,$title,$text );
       echo json_encode(array( 'error'=>0 ));
     }
   }

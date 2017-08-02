@@ -50,6 +50,17 @@
     'class' => $this->validation->error_class($field),
     'placeholder' => ''
   ))) ?>
+  <? $field = 'no_discount'; $this->load->view('app/form', array('item' => array(
+    'columns' => 2,
+    'type' => 'checkbox',
+    'form' => $wgetId,
+    'name' => $field,
+    'label' => $this->lang->line('Con descuento en cantidad'),
+    'value' => $field,
+    'error' => $this->validation->error($field),
+    'class' => $this->validation->error_class($field),
+    'checked' => !($dataItem[$field] > 0)
+  ))) ?>  
   <? $field = 'promotion'; $this->load->view('app/form', array('item' => array(
     'columns' => 2,
     'type' => 'checkbox',
@@ -60,7 +71,7 @@
     'error' => $this->validation->error($field),
     'class' => $this->validation->error_class($field),
     'checked' => ($dataItem[$field] > 0)
-  ))) ?>  
+  ))) ?>
   <?/* $field = 'highlight'; $this->load->view('app/form', array('item' => array(
     'columns' => 2,
     'type' => 'checkbox',

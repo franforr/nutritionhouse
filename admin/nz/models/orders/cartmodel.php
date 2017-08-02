@@ -209,11 +209,25 @@ class CartModel extends AppModel {
                   'id_state' => $this->input->post('id_state'),
                   'comments' => $this->input->post('comments'),
                   );
-    if( $this->id )
+    if( $this->id ) {
+
+      $dataElement = $this->DataElement($this->id);
       $sql = $this->db->update_string($this->table, $data, "id_cart = '{$this->id}'" );
-    else
+      $this->db->query($sql); 
+
+      if($data['id_state']!= $dataElement['id_state'] && $data['id_state']>2) {
+        $this->load->model('MailModel', 'Mail');
+        $dataElement = $this->DataElement($this->id);
+        $title = 'Tu pedido se encuenta: '.$dataElement['state'].' - Pedido Nº'.$dataElement['code'];
+        $text = 'El estado tu pedido fue actualizado a <b>'.$dataElement['state'].'</b>.';
+        $this->Mail->SendCart( array($dataElement['mail']),$dataElement,$title,$text );
+      }
+
+    } else {
       $sql = $this->db->insert_string($this->table, $data );
-    $this->db->query($sql); 
+      $this->db->query($sql); 
+    }
+    
     return $this->id ? $this->id : $this->db->insert_id();
   }
   

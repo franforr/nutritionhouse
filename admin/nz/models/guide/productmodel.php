@@ -201,6 +201,7 @@ class ProductModel extends AppModel {
       'id_file' => $this->input->post('id_file') ? $this->input->post('id_file') : false,
       'id_gallery' => $this->input->post('id_gallery') ? $this->input->post('id_gallery') : false,
       'promotion' => $this->input->post('promotion') ? 1 : 0,
+      'no_discount' => $this->input->post('no_discount') ? 0 : 1,
       'highlight' => $this->input->post('highlight') ? 1 : 0,
       'related' => json_encode($this->input->post('related')),
       'related_gim' => json_encode($this->input->post('related_gim')),
