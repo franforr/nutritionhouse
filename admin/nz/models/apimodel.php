@@ -94,7 +94,7 @@ public function GetCatTitle($id_category = 0)
 
   public function GetProduct($id_product = 0)
   {
-    $sql = "select f.file, p.id_gallery, p.id_product as id, p.id_category as id_category, pc.category as category, p.title as title, p.cost as price, p.text as text, p.id_state as state, p.related as related, p.related_gim as related_gim, p.id_size as id_size, p.no_discount as no_discount 
+    $sql = "select f.file, p.id_gallery, p.id_product as id, p.id_category as id_category, pc.category as category, p.title as title, p.cost as price, p.text as text, p.id_state as state, p.related as related, p.related_gim as related_gim, p.id_size as id_size, p.no_discount as no_discount, p.no_related as no_related 
     from product p
     left join nz_file f on f.id_file = p.id_file
     left join product_category pc on pc.id_category = p.id_category

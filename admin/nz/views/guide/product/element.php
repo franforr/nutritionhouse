@@ -232,6 +232,19 @@
       <div style="clear:both"></div>
       <ul class="list-items">
       </ul>
+
+
+  <? $field = 'no_related'; $this->load->view('app/form', array('item' => array(
+    'columns' => 12,
+    'type' => 'checkbox',
+    'form' => $wgetId,
+    'name' => $field,
+    'label' => $this->lang->line('Sin productos relacionados'),
+    'value' => $field,
+    'error' => $this->validation->error($field),
+    'class' => $this->validation->error_class($field),
+    'checked' => ($dataItem[$field] > 0)
+  ))) ?>
 </div>
 
 <? $field = 'related_gim' ?>

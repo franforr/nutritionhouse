@@ -207,6 +207,7 @@ class ProductModel extends AppModel {
       'related_gim' => json_encode($this->input->post('related_gim')),
       'more_categories' => json_encode($this->input->post('more_categories')),
       'active' => $this->input->post('active') ? 1 : 0,
+      'no_related' => $this->input->post('no_related') ? 1 : 0,
     );
     $gitems = explode(',', $this->input->post('id_gallery-items'));
     if($data['id_gallery'])
@@ -269,6 +270,8 @@ class ProductModel extends AppModel {
     $ret['related'] = $this->input->post() ? $this->input->post('related') : false;
     $ret['more_categories'] = $this->input->post() ? $this->input->post('more_categories') : false;
     $ret['active'] = $this->input->post('active') ? 1 : 0;
+    $ret['no_related'] = $this->input->post('no_related') ? 1 : 0;
+    $ret['no_discount'] = $this->input->post('no_discount') ? 1 : 0;
     return $ret;
   }
   
